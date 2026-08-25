@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Template · claim part — The Understudy</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Breadcrumb. From books/<slug>/ the paths are ../../index.html and
+       index.html. From _template/ they are one level shallower. -->
+  <header class="site">
+    <a href="../index.html">The Understudy</a> /
+    <a href="part.html">Templates</a> /
+    <span>claim</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="claim">
+
+      <!-- The eyebrow carries: position in the sequence, kind, what it
+           covers, and how long it takes. Each span becomes a middot-
+           separated cell automatically. -->
+      <p class="eyebrow">
+        <span>Part n of m</span><span>claim</span><span>covers chapter k</span><span>~26 min</span>
+      </p>
+
+      <h1 id="h-title">The title states the argument, not the topic</h1>
+
+      <!-- ================= WHERE ================= -->
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p>Two or three sentences of continuity, written for someone
+        returning after a week — what is already established, and what this
+        part does with it. Where a part has hard dependencies, name them
+        outright: <em>assumes parts 3 and 5</em>. This section is set in the
+        site's face rather than the book's, because it is scaffolding the
+        site provides, not something the book said.</p>
+      </section>
+
+      <!-- ================= READ ==================
+           85% or more of the page. For a claim part the required apparatus
+           is: the joint map, at least one case walked joint by joint, a
+           contrast case, and the support ledger. -->
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <!-- A table of contents is required on parts over ~4,000 words. -->
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-joints">The joint map</a></li>
+            <li><a href="#h-walk">The case walked</a></li>
+            <li><a href="#h-contrast">The contrast case</a></li>
+            <li><a href="#h-support">The support ledger</a></li>
+          </ol>
+        </nav>
+
+        <p>What follows is placeholder prose describing what belongs in each
+        slot. It is written as continuous English rather than as filler so
+        that the typography can actually be judged — and it deliberately
+        contains the things that stress a stylesheet: em-dashes, numerals,
+        italicised terms of art, a short attributed quote, inline
+        <code>code</code>, and footnote markers.</p>
+
+        <h3 id="h-joints">The joint map</h3>
+
+        <p>Decompose the claim into the conditions it rests on. Number them,
+        because everything after this refers to them by number, and give each
+        one a stable id so prose elsewhere can link straight to
+        <a href="#j3">joint&nbsp;3</a> rather than asking the reader to scroll
+        and count.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup></p>
+
+        <ol class="joints">
+          <li id="j1">
+            <span class="joint-name">The first condition</span>
+            <p>State the condition in the book's terms, then spend a
+            paragraph on whatever the author assumed you would already know.
+            This is where a readthrough genuinely beats the book: the book
+            says <em>as so-and-so showed</em> and moves on; the page stops and
+            explains what so-and-so showed.</p>
+          </li>
+          <li id="j2">
+            <span class="joint-name">The second condition</span>
+            <p>Keep the particulars at full resolution inside each joint. A
+            joint stated abstractly is a joint the reader cannot test against
+            a case, and testing against cases is the entire point of
+            numbering them.</p>
+          </li>
+          <li id="j3">
+            <span class="joint-name">The third condition</span>
+            <p>Where the book is more confident than its evidence — or less —
+            note it, but note it <em>as attribution</em> inside the
+            readthrough and put the assessment itself in the notes section.
+            The reader must always be able to tell whose sentence they are
+            reading.</p>
+          </li>
+          <li id="j4">
+            <span class="joint-name">The fourth condition</span>
+            <p>Books almost never say whether their conditions are
+            conjunctive or disjunctive, and the interesting failure usually
+            lives exactly there.</p>
+          </li>
+        </ol>
+
+        <!-- Often the single most valuable sentence in the part. -->
+        <p class="joint-verdict"><strong>The joints are conjunctive, and
+        joint&nbsp;4 is carrying the argument.</strong> Naming the
+        load-bearing joint — the one whose removal changes the outcome most —
+        is what separates the book's catastrophes from the ordinary
+        background functioning of the same forces.</p>
+
+        <!-- ---------- THE CASE WALKED: a raised block ---------- -->
+        <div class="case-walk">
+          <h3 id="h-walk" data-label="The case walked">A named case, joint by joint</h3>
+
+          <p>Take one of the book's own cases and run it through the joints
+          <em>in order</em>, showing which are present, in what degree, and
+          how the outcome followed. Every step shown, nothing skipped as
+          obvious. A case narrated as a story is not a case walked — the
+          difference is whether the reader can see the argument's machinery
+          engaging with the particulars.</p>
+
+          <ol>
+            <li><strong>Joint 1 is present.</strong> Show it with the
+            specifics — a place, a year, a quantity such as
+            <span class="val">1,240 households</span>, a named actor. The
+            numbered steps are set in the machine face because a walk is
+            machinery being operated, not prose being read.</li>
+            <li><strong>Joint 2 is present, in degree.</strong> Degree
+            matters: a joint half-present predicts a different outcome than a
+            joint fully present, and saying which is what makes the walk
+            testable.</li>
+            <li><strong>Joint 3 converts the necessity into a good.</strong>
+            Quote sparingly here — under fifteen words, exact, attributed —
+            and only where the book's own phrasing is itself the evidence.</li>
+            <li><strong>Joint 4 removes the correcting feedback.</strong> The
+            outcome follows from the structure rather than being asserted
+            alongside it.</li>
+          </ol>
+        </div>
+
+        <!-- ---------- THE CONTRAST: same family, neutral rule ---------- -->
+        <div class="case-walk contrast">
+          <h3 id="h-contrast" data-label="The contrast">A case that runs 1–3 and stops</h3>
+          <p>Mandatory, because without it the joints look like a single
+          undifferentiated force. Find a case that satisfies all the joints
+          but the load-bearing one and show what the claim then predicts —
+          and whether the record agrees. This is the contrast test from the
+          five tests, run on the page rather than left to the reader.</p>
+        </div>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>This is the site speaking, and it is set into the page rather
+          than on it so that you can tell at a glance. Evaluation lives here
+          and in the afterword — nowhere else. It has to be specific:
+          <em>some critics have questioned this</em> is worthless. Who, on
+          what grounds, and what did the book's defenders say back?</p>
+        </aside>
+
+        <p>A long stretch of unbroken prose follows, because a stylesheet
+        that only ever gets tested against short blocks is a stylesheet that
+        has not been tested. Write from understanding, never from the page.
+        Build the model, close the book, write. Sentence-by-sentence work
+        against the source produces paraphrase, which is both worse reading
+        and a legal problem — if your paragraphs map onto the author's
+        paragraphs, you have paraphrased rather than retold. Retelling
+        reorganises, connects, and explains what the author assumed you would
+        infer, which is why a page can be shorter than the chapter it covers
+        and still transmit more of it.</p>
+
+        <p>The prose stays continuous. Bullets are for genuinely enumerable
+        things, and a page that is mostly bullets is a summary wearing a
+        costume. The failure this site exists to avoid is the one where
+        understanding gets compressed into its own residue — the takeaways —
+        and the residue gets distributed as though it were the thing. A
+        summary tells you what a book is about; this tells you what is
+        <em>in</em> it, which is roughly the difference between a menu and a
+        meal.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup></p>
+
+        <p>Density is not coverage. A part that mentions eleven case studies
+        in a list has covered none of them, and the moment a page says
+        <em>the author gives several examples</em> it has deleted the book.
+        If the book spends nine pages on a case, the page spends real space
+        on that case. The rule is blunt because the failure is so common.</p>
+
+        <blockquote>
+          <p>Quotes are short, exact, attributed, and rare.</p>
+          <cite>— the brief, on what may be reproduced</cite>
+        </blockquote>
+
+        <!-- ---------- THE SUPPORT LEDGER ---------- -->
+        <h3 id="h-support">The support ledger</h3>
+
+        <p>The cost-sheet analogue for a claim. Per joint: what evidence is
+        actually offered, of what type, and how much weight it can bear.</p>
+
+        <div class="support-wrap">
+          <table class="support">
+            <caption>Evidence offered, per joint</caption>
+            <thead>
+              <tr><th scope="col">Joint</th><th scope="col">Evidence offered</th><th scope="col">Type</th><th scope="col">Weight it bears</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row"><a href="#j1">1</a></th><td>Named archival cases, two of them worked at length</td><td class="evidence">case study</td><td>Establishes the mechanism exists; cannot establish frequency</td></tr>
+              <tr><th scope="row"><a href="#j2">2</a></th><td>Contemporary testimony from participants</td><td class="evidence">testimony</td><td>Strong on motive, weak on outcome</td></tr>
+              <tr><th scope="row"><a href="#j3">3</a></th><td>Inference from the theory, not independently evidenced</td><td class="evidence">inference</td><td>Asserted, not established — see the ledger below</td></tr>
+              <tr><th scope="row"><a href="#j4">4</a></th><td>Comparative series across four states</td><td class="evidence">comparison</td><td>The strongest support in the part</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Then the two things claim books systematically leave implicit.
+        <strong>How the cases were selected:</strong> a book that examines
+        only failures has selected on the dependent variable, and the reader
+        should know that before deciding what the cases prove. Saying so is
+        not an attack; it is a specification of what the evidence can and
+        cannot establish. <strong>What the claim buys and pays:</strong>
+        explanatory reach is purchased with something, usually elasticity — a
+        frame that can be fitted to any outcome after the fact explains a
+        great deal and predicts nothing.</p>
+      </section>
+
+      <!-- ================= VOICE ================= -->
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>Short. How the book itself handles this material — framing,
+        register, recurring metaphors, characteristic moves. Knowing how a
+        book <em>feels</em> is part of having read it. Omit this section
+        entirely where there is nothing distinctive to say; do not pad it.</p>
+      </section>
+
+      <!-- ================= LEDGER ================= -->
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p>The separation that keeps a reader honest. What did this part
+        actually <em>establish</em>, and what did it merely
+        <em>assert</em>? Where is the prose more confident than the evidence,
+        and where is it less? For a claim part, this is also where the case
+        selection gets stated plainly.</p>
+      </section>
+
+      <!-- ================= NOTES =================
+           The evaluation layer, gathered. The whole section is recessed. -->
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>The site's assessment, boxed and labelled so it can never be
+        mistaken for transmission. Cover, where relevant: the replication
+        status of cited studies; whether a described system still works that
+        way; contested history; what the field concluded afterward; and the
+        strongest objection the book does not answer.</p>
+        <p>Fairness is a requirement, not a courtesy. For contested material,
+        present the dispute rather than adjudicating it, and give the book's
+        side its best form rather than its most convenient one.</p>
+
+        <aside class="note">
+          <p class="note-label">On the record</p>
+          <p>A note nested inside the notes section flattens to a ruled
+          block rather than a box inside a box.</p>
+        </aside>
+      </section>
+
+      <!-- ================= CARRY ================= -->
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>What the rest of the book assumes you now have — a recap for the
+        returning reader and the specific hooks the next part will hang
+        things on. Name the joints by number if later parts reuse them.</p>
+      </section>
+
+      <!-- ================= FOOTNOTES ================= -->
+      <section class="footnotes" aria-labelledby="h-fn">
+        <h2 id="h-fn">Footnotes</h2>
+        <ol>
+          <li id="fn-1">Footnotes are <code>&lt;sup&gt;&lt;a&gt;</code> pairs
+          with return links and no JavaScript at all; the highlight on
+          arrival is <code>:target</code>.
+          <a class="fn-back" href="#fnref-1" aria-label="Back to reference 1">&#8617;</a></li>
+          <li id="fn-2">Use them for the aside that would break the sentence,
+          not for material that belongs in the notes section.
+          <a class="fn-back" href="#fnref-2" aria-label="Back to reference 2">&#8617;</a></li>
+        </ol>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="part.html"><span class="dir">Previous</span><span class="lbl">Template index</span></a>
+      <a rel="next" href="part-mechanism.html"><span class="dir">Next</span><span class="lbl">Mechanism template</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p>The Understudy — a template page, not book content.</p>
+  </footer>
+</body>
+</html>

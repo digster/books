@@ -1,0 +1,17 @@
+{
+  "slug": "book-slug",
+  "title": "Book Title",
+  "author": "Author Name",
+  "year": 1998,
+  "domains": ["Domain", "Second domain"],
+  "parts": 9,
+  "kinds": { "claim": 6, "mechanism": 1, "terrain": 2 },
+  "words": 23800,
+  "reading_minutes": 108,
+  "chapters_covered": { "full": 8, "condensed": 2, "folded": 0, "read_it": 1 },
+  "book_still_required": "State plainly which chapters did not transmit and why, or say that the pages carry the book.",
+  "prerequisites": [],
+  "status": "draft",
+  "published": "2026-08-25",
+  "updated": "2026-08-25"
+}

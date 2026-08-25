@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (tools/check.py only; there is no Python runtime dependency)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+
+# Test artefacts — screenshots from browser verification are never committed
+*.png
+*.jpg
+*.jpeg
+screenshots/
+test-results/
+playwright-report/
+
+# Local Claude Code state (launch.json IS committed — it is the preview config)
+.claude/settings.local.json
+
+# There is no build output to ignore. That is the point.

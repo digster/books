@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Template · mechanism part — The Understudy</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../index.html">The Understudy</a> /
+    <a href="part.html">Templates</a> /
+    <span>mechanism</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="mechanism">
+
+      <p class="eyebrow">
+        <span>Part n of m</span><span>mechanism</span><span>covers chapters j–k</span><span>~31 min</span>
+      </p>
+
+      <h1 id="h-title">The title names the machine and what it buys</h1>
+
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p>For a mechanism part, this is also where hard dependencies get
+        named — a mechanism built on top of another mechanism is unreadable
+        to someone who skipped the first. <em>Assumes part 4.</em></p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-ratchet">The ratchet</a></li>
+            <li><a href="#h-figure">The shape of it</a></li>
+            <li><a href="#h-trace">The trace</a></li>
+            <li><a href="#h-code">The smallest version that shows it</a></li>
+            <li><a href="#h-costs">The cost sheet</a></li>
+          </ol>
+        </nav>
+
+        <h3 id="h-ratchet">The ratchet</h3>
+
+        <p>Technical exposition works by escalation, and so does good
+        conceptual exposition. Transmit the escalation, not the endpoint. Do
+        not skip to the final design: a reader handed the finished structure
+        without first feeling the problem it solves has learned a fact, while
+        a reader walked up the ratchet has learned <em>why anyone would build
+        such a thing</em> — which is what lets them reason about the next
+        system they meet. Books that do not ratchet explicitly still have one
+        buried in them; find it and surface it.</p>
+
+        <ol class="ratchet">
+          <li>
+            <h4 id="h-turn-1">The obvious design, and why it was reasonable</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>State the current design so that it sounds reasonable —
+              because it <em>was</em> reasonable. A ratchet that opens by
+              sneering at the naive design teaches nothing, since the reader
+              never believes anyone would have chosen it.</dd>
+
+              <dt>What breaks</dt>
+              <dd>The specific case that defeats it, with numbers or a
+              concrete scenario. Not <em>this is inefficient</em> — how
+              inefficient, on what input. A figure like
+              <span class="val">4 MB per process</span> does work that the
+              word "large" cannot.</dd>
+
+              <dt>The fix</dt>
+              <dd>What changes, and why <em>that</em> change and not another.
+              The second half of that sentence is the one usually missing.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Every fix buys something with something. Name
+              the currency: memory, latency, I/O, bandwidth, complexity,
+              generality, falsifiability.</dd>
+            </dl>
+          </li>
+          <li>
+            <h4 id="h-turn-2">The second turn, forced by the first turn's cost</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>The design as the previous turn left it — including the
+              debt it took on.</dd>
+              <dt>What breaks</dt>
+              <dd>Usually the cost from turn one, now dominant at scale.</dd>
+              <dt>The fix</dt>
+              <dd>The next structure, motivated rather than announced.</dd>
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">And the currency it pays in, which is
+              frequently what the following part is about.</dd>
+            </dl>
+          </li>
+        </ol>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>Where a book states a hardware assumption that no longer holds —
+          seek times, cache sizes, a cost ratio that has since inverted — say
+          so here, with the current figure. The mechanism usually survives;
+          the arithmetic around it often does not.</p>
+        </aside>
+
+        <!-- ---------- THE FIGURE ----------
+             Hand-authored inline SVG. Every colour comes from a .fig-* class
+             so the drawing follows the theme; a figure with hardcoded fills
+             is unreadable in dark mode and there is no build step that could
+             fix it. Authored at a 420-unit viewBox width so labels stay
+             legible on a phone. -->
+        <figure id="h-figure">
+          <svg viewBox="0 0 420 232" role="img" aria-labelledby="figtitle figdesc">
+            <title id="figtitle">A two-stage lookup</title>
+            <desc id="figdesc">An input is split into two index fields. The
+            first indexes a directory, whose entry points at one chunk of a
+            second-level table; the second field indexes within that chunk to
+            reach the result.</desc>
+
+            <defs>
+              <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5"
+                      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="fig-arrow"/>
+              </marker>
+            </defs>
+
+            <!-- the split input -->
+            <text x="0" y="14" class="fig-label">Input, split into fields</text>
+            <rect x="0"   y="24" width="86" height="30" rx="3" class="fig-box-hi"/>
+            <rect x="86"  y="24" width="86" height="30" rx="3" class="fig-box-hi"/>
+            <rect x="172" y="24" width="74" height="30" rx="3" class="fig-box"/>
+            <text x="43"  y="44" class="fig-val" text-anchor="middle">field A</text>
+            <text x="129" y="44" class="fig-val" text-anchor="middle">field B</text>
+            <text x="209" y="44" class="fig-val" text-anchor="middle">offset</text>
+
+            <!-- stage one -->
+            <path d="M 43 54 L 43 84" class="fig-flow" marker-end="url(#ah)"/>
+            <rect x="0" y="88" width="150" height="56" rx="4" class="fig-box"/>
+            <text x="12" y="108" class="fig-label">Directory</text>
+            <text x="12" y="126" class="fig-sub">one entry per field A</text>
+
+            <!-- stage two -->
+            <path d="M 150 116 L 196 116" class="fig-flow" marker-end="url(#ah)"/>
+            <rect x="200" y="88" width="150" height="56" rx="4" class="fig-box"/>
+            <text x="212" y="108" class="fig-label">Second level</text>
+            <text x="212" y="126" class="fig-sub">chunk selected above</text>
+
+            <path d="M 129 54 C 129 66, 275 62, 275 84" class="fig-line"/>
+            <text x="284" y="70" class="fig-sub">field B indexes here</text>
+
+            <!-- result -->
+            <path d="M 275 144 L 275 174" class="fig-flow" marker-end="url(#ah)"/>
+            <rect x="200" y="178" width="150" height="40" rx="4" class="fig-box-hi"/>
+            <text x="275" y="203" class="fig-val" text-anchor="middle">result</text>
+
+            <text x="0" y="186" class="fig-sub">Unused ranges cost only</text>
+            <text x="0" y="202" class="fig-sub">an invalid directory entry —</text>
+            <text x="0" y="218" class="fig-sub">no second-level chunk exists.</text>
+          </svg>
+          <figcaption><b>Figure 1.</b> A two-stage lookup. Label the figure
+          fully: one that needs the prose to be intelligible has failed. The
+          sparse case is drawn, not described, because the sparse case is the
+          entire reason the second stage exists.</figcaption>
+        </figure>
+
+        <!-- ---------- THE TRACE: the raised family ---------- -->
+        <div class="trace">
+          <h3 id="h-trace" data-label="The trace">One complete run, with real values</h3>
+
+          <p>At least one complete run of the mechanism on a concrete input,
+          every step shown, real values throughout. No step skipped as
+          obvious — the skipped step is always the one the reader needed.</p>
+
+          <ol>
+            <li>Take the input <span class="val">0x0040_1A3C</span> and split
+            it into the fields the figure names: field A is
+            <span class="val">0x001</span>, field B is
+            <span class="val">0x001</span>, offset is
+            <span class="val">0xA3C</span>.</li>
+            <li>Index the directory with field A. Entry
+            <span class="val">1</span> is valid and names chunk
+            <span class="val">0x07</span>.</li>
+            <li>Index that chunk with field B. Entry <span class="val">1</span>
+            holds <span class="val">0x0092</span>.</li>
+            <li>Combine with the offset. The base is shifted by the same
+            12 bits the offset field occupies:
+            <span class="val">(0x0092 &lt;&lt; 12) | 0xA3C = 0x0009_2A3C</span>.
+            That is the result, and the arithmetic has been re-executed
+            rather than proofread.</li>
+          </ol>
+
+          <p>Keep a trace proportionate. Show the mechanism's
+          <em>characteristic</em> operation rather than exhausting its state
+          space: for a protocol with many message orderings, trace the common
+          path in full and then name the interesting divergences rather than
+          running each one.</p>
+        </div>
+
+        <h3 id="h-code">The smallest version that shows the behaviour</h3>
+
+        <p>Where the book uses code, it appears here as a minimal
+        reimplementation — never a transcribed listing. Twenty readable lines
+        beat eighty faithful ones. Highlighting is hand-applied or absent;
+        there is no JavaScript on this site to do it.</p>
+
+<pre><code class="language-python"><span class="c"># A two-stage lookup, reduced to the part that matters.</span>
+<span class="k">def</span> resolve(addr, directory, chunks):
+    a      = (addr &gt;&gt; <span class="n">22</span>) &amp; <span class="n">0x3FF</span>   <span class="c"># field A</span>
+    b      = (addr &gt;&gt; <span class="n">12</span>) &amp; <span class="n">0x3FF</span>   <span class="c"># field B</span>
+    offset =  addr        &amp; <span class="n">0xFFF</span>   <span class="c"># byte within the unit</span>
+
+    entry = directory[a]
+    <span class="k">if</span> <span class="k">not</span> entry.valid:
+        <span class="k">raise</span> LookupError(<span class="s">"no chunk for this range"</span>)
+
+<span class="hl">    base = chunks[entry.chunk][b].base    # the second access</span>
+    <span class="k">return</span> (base &lt;&lt; <span class="n">12</span>) | offset
+</code></pre>
+
+        <p>The highlighted line is the one worth noticing: translation now
+        costs a second memory access before the access the caller actually
+        wanted, which is the cost the next turn of the ratchet has to pay
+        down.</p>
+
+        <!-- ---------- THE COST SHEET ---------- -->
+        <h3 id="h-costs">The cost sheet</h3>
+
+        <p>Brief and structured. A mechanism without its cost model is a
+        description, and a reader who has only the description cannot
+        choose.</p>
+
+        <div class="table-wrap">
+          <table class="costs">
+            <caption>What this costs, and when it is worth paying</caption>
+            <thead>
+              <tr><th scope="col">Cost</th><th scope="col">Currency</th><th scope="col">Worth paying when</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Second access per lookup</th><td class="currency">latency</td><td>Almost always — the space saved is orders of magnitude larger</td></tr>
+              <tr><th scope="row">Directory itself</th><td class="currency">memory</td><td>Negligible against the flat design it replaces</td></tr>
+              <tr><th scope="row">Two structures to keep coherent</th><td class="currency">complexity</td><td>When the address space is sparse, which is the common case</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>How the book handles technical material: whether it dialogues,
+        whether it boxes its cruxes, whether it states the cost or leaves the
+        reader to find it.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p>For a mechanism part: what does the book state without justifying,
+        and what is the justification actually? Books frequently assert a
+        constant, a ratio, or a rule of thumb whose derivation is nowhere in
+        the text.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>Whether the described system still works this way; whether the
+        hardware assumptions still hold; what the field concluded afterward;
+        and the strongest objection the book does not answer.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>The mechanism in one sentence, the cost in one more, and the
+        specific hook the next part hangs on — typically the cost this part
+        took on.</p>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="part-claim.html"><span class="dir">Previous</span><span class="lbl">Claim template</span></a>
+      <a rel="next" href="part-terrain.html"><span class="dir">Next</span><span class="lbl">Terrain template</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p>The Understudy — a template page, not book content.</p>
+  </footer>
+</body>
+</html>

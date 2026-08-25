@@ -1,0 +1,1481 @@
+@charset "utf-8";
+/* ============================================================================
+   The Understudy — assets/style.css
+   ----------------------------------------------------------------------------
+   One file, in the order the brief specifies:
+       reset -> tokens -> typography -> layout -> components -> print
+
+   DESIGN DIRECTION — "Two surfaces"
+
+       The site's commentary sits BELOW the page surface and the worked runs
+       sit ABOVE it, so a reader scrolling fast knows who is talking before
+       reading a word.
+
+   Three grounds, and the ordering between them is the whole contract:
+
+       --paper-sunk    <  --paper  <  --paper-raised      (in lightness)
+       aside.note         the book     .case-walk / .trace
+       the SITE talking   itself       the book's machinery being WORKED
+
+   The dark theme redefines all three preserving that ordering, which is why
+   the polarity needs no second rule for dark mode: recessed is always darker
+   than its ground, raised is always lighter.
+
+   Three faces carry the same distinction redundantly, so it survives
+   greyscale, print, and a reader who does not consciously notice grounds:
+
+       serif = the book   ·   sans = the site   ·   mono = the machinery
+
+   Colour is authored in OKLCH for a perceptually even ramp and committed as
+   plain hex — there is no build step, so the conversion happened once at
+   authoring time. The OKLCH source value is in a comment beside each token;
+   recompute from those if you change the ramp.
+
+   Every foreground/background pair below was checked numerically: all body
+   and secondary text clears WCAG AA 4.5:1 on all three grounds, both themes.
+   ========================================================================= */
+
+
+/* ==========================================================================
+   1 · RESET
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Zero the margins we will set deliberately; keep nothing implicit. */
+html, body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ol, ul, pre, table {
+  margin: 0;
+  padding: 0;
+}
+
+ol[class], ul[class] { list-style: none; }
+
+html {
+  -webkit-text-size-adjust: 100%;   /* stop iOS inflating text in landscape */
+  text-size-adjust: 100%;
+}
+
+img, svg { max-width: 100%; height: auto; }
+svg { display: block; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* Inherit rather than reset, so a font change in one place actually lands. */
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a) { color: inherit; }
+
+/* Honour the OS setting. Nothing here animates by necessity — every
+   transition below is an affordance, so removing them costs nothing. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ==========================================================================
+   2 · FONTS
+   Self-hosted variable woff2. Four files, ~173KB, all SIL OFL — licences sit
+   beside them in assets/fonts/. Nothing loads from the network: the site is
+   required to render with the network off and from file://.
+   Weight ranges below are the fonts' real axis ranges, so intermediate
+   weights (550, 620) are genuine instances rather than synthesised.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Literata";
+  src: url("fonts/literata-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("fonts/literata-latin-wght-italic.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: italic;       /* a real drawn italic, never a synthesised slant */
+  font-display: swap;
+}
+@font-face {
+  font-family: "Public Sans";
+  src: url("fonts/public-sans-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ==========================================================================
+   3 · TOKENS
+   ========================================================================== */
+
+:root {
+  /* --- type ------------------------------------------------------------ */
+  --font-book: "Literata", "Iowan Old Style", Charter, "Source Serif 4",
+               Georgia, "Times New Roman", serif;
+  --font-site: "Public Sans", ui-sans-serif, -apple-system, "Segoe UI",
+               Roboto, system-ui, sans-serif;
+  --font-mach: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code",
+               Menlo, Consolas, monospace;
+
+  /* 17px on a phone, 19px on a desktop. The brief's floor is 17/18. */
+  --size-body: clamp(1.0625rem, 1.005rem + 0.29vw, 1.1875rem);
+  --leading:   1.65;
+
+  /* The measure. 68ch of Literata lands inside the brief's 62–72 char band. */
+  --measure: 68ch;
+
+  /* How far blocks that need room may bleed past the measure. Zero on a
+     phone, where there is no room to give; set in a media query below. */
+  --bleed: 0rem;
+
+  /* --- rhythm ---------------------------------------------------------- */
+  --gap-xs:  0.35rem;
+  --gap-sm:  0.75rem;
+  --gap-md:  1.35rem;
+  --gap-lg:  2.25rem;
+  --gap-xl:  3.5rem;
+  --gap-2xl: 5rem;
+
+  --radius:  4px;
+  --radius-lg: 7px;
+
+  /* --- light theme ------------------------------------------------------
+     The three grounds. Their ORDER is load-bearing; see the header. */
+  --paper:        #fafbfe;  /* oklch(98.8% 0.004 265)  the page: the book    */
+  --paper-sunk:   #edf0f5;  /* oklch(95.4% 0.008 265)  recessed: the site    */
+  --paper-raised: #ffffff;  /* oklch(100%  0     265)  raised: worked runs   */
+
+  --rule:         #d7dbe2;  /* oklch(89% 0.010 265) */
+  --rule-strong:  #b9bec7;  /* oklch(80% 0.014 265) */
+
+  --ink:          #202634;  /* oklch(27% 0.028 265)  14.6:1 on paper         */
+  --ink-soft:     #515866;  /* oklch(46% 0.024 265)   6.9:1 on paper         */
+  --ink-faint:    #676c77;  /* oklch(53% 0.018 265)   4.6:1 on sunk, the
+                               hardest ground it ever sits on                */
+
+  --accent:       #2f56b4;  /* oklch(48% 0.155 264)  structural indigo       */
+  --accent-deep:  #1a3b8b;  /* oklch(38% 0.140 264)                          */
+  --accent-tint:  #dce8ff;  /* oklch(93% 0.035 264)                          */
+
+  /* Coverage dispositions. Always paired with a glyph in the markup — the
+     table must never depend on colour alone to say what it says. */
+  --d-full:       #00713e;  /* oklch(48% 0.12 155) */
+  --d-condensed:  #0c60a3;  /* oklch(48% 0.13 250) */
+  --d-folded:     #734f99;  /* oklch(50% 0.12 305) */
+  --d-readit:     #975800;  /* oklch(52% 0.13 70)  */
+
+  /* Elevation. Raised blocks lift off the page; sunk blocks press into it. */
+  --lift:   0 1px 1px rgba(32, 38, 52, 0.04),
+            0 6px 18px -10px rgba(32, 38, 52, 0.22);
+  --press:  inset 0 1px 3px rgba(32, 38, 52, 0.07),
+            inset 0 0 0 1px rgba(32, 38, 52, 0.03);
+
+  --focus:  var(--accent);
+
+  color-scheme: light;
+}
+
+/* --- dark theme ---------------------------------------------------------
+   Note what stays true: sunk is still darker than paper, raised is still
+   lighter. The design rule survives inversion without a second statement.
+   Ink turns warm here — a warm off-white on a cool slate reads as ink on a
+   lit page rather than as a terminal. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:        #141820;  /* oklch(21%   0.016 262) */
+    --paper-sunk:   #0c0f16;  /* oklch(17%   0.016 262)  still darker        */
+    --paper-raised: #1e232c;  /* oklch(25.5% 0.018 262)  still lighter       */
+
+    --rule:         #2e333c;  /* oklch(32% 0.018 262) */
+    --rule-strong:  #474d58;  /* oklch(42% 0.020 262) */
+
+    --ink:          #e8e4dc;  /* oklch(92% 0.012 85)  14.0:1 on paper        */
+    --ink-soft:     #b5b1a7;  /* oklch(76% 0.014 85)   8.3:1                 */
+    --ink-faint:    #969289;  /* oklch(66% 0.014 85)   5.1:1 on raised       */
+
+    --accent:       #8db7ff;  /* oklch(78% 0.120 262) */
+    --accent-deep:  #b1d2ff;  /* oklch(86% 0.090 262) */
+    --accent-tint:  #202e47;  /* oklch(30% 0.050 262) */
+
+    --d-full:       #6cd092;  /* oklch(78% 0.13 155) */
+    --d-condensed:  #80bdfb;  /* oklch(78% 0.11 250) */
+    --d-folded:     #cdaef2;  /* oklch(80% 0.10 305) */
+    --d-readit:     #ebb25f;  /* oklch(80% 0.12 75)  */
+
+    /* Shadow does little work on a dark ground, so elevation is carried
+       mostly by the ground itself plus a light top edge on raised blocks. */
+    --lift:   0 1px 1px rgba(0, 0, 0, 0.35),
+              0 8px 22px -12px rgba(0, 0, 0, 0.65);
+    --press:  inset 0 1px 4px rgba(0, 0, 0, 0.45),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+
+    color-scheme: dark;
+  }
+}
+
+@media (min-width: 60rem) {
+  :root { --bleed: 2rem; }
+}
+
+
+/* ==========================================================================
+   4 · TYPOGRAPHY
+   These pages are read for an hour at a time, so this section is the product.
+   ========================================================================== */
+
+body {
+  font-family: var(--font-book);      /* serif: the default voice is the book */
+  font-size: var(--size-body);
+  line-height: var(--leading);
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis-weight: none;   /* variable axes exist; never fake a weight */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Prose. The only element with a bottom margin is the paragraph, so vertical
+   rhythm has exactly one source and never doubles up. */
+p { margin-block-end: var(--gap-md); }
+p:last-child { margin-block-end: 0; }
+
+/* Headings. Serif throughout — a heading inside the readthrough is still the
+   book speaking. Chrome and site-voice headings override to sans below. */
+h1, h2, h3, h4 {
+  font-family: var(--font-book);
+  font-weight: 620;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  text-wrap: balance;          /* progressive: ignored where unsupported */
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(1.85rem, 1.5rem + 1.65vw, 2.6rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.4rem, 1.24rem + 0.72vw, 1.75rem); }
+h3 { font-size: clamp(1.13rem, 1.07rem + 0.3vw, 1.28rem); }
+h4 { font-size: 1.02rem; font-weight: 660; }
+
+h2 { margin-block: var(--gap-xl) var(--gap-md); }
+h3 { margin-block: var(--gap-lg) var(--gap-sm); }
+h4 { margin-block: var(--gap-md) var(--gap-xs); }
+:is(h1, h2, h3, h4):first-child { margin-block-start: 0; }
+
+em, i, cite { font-style: italic; }
+strong, b { font-weight: 660; }
+cite { font-style: italic; }
+
+small { font-size: 0.86em; }
+
+sup, sub { font-size: 0.72em; line-height: 0; vertical-align: baseline;
+           position: relative; }
+sup { top: -0.5em; }
+sub { bottom: -0.22em; }
+
+abbr[title] { text-decoration: underline dotted; cursor: help; }
+
+/* Links. Underlines are the affordance; colour alone would fail for readers
+   who cannot distinguish it. The offset keeps descenders legible at 19px. */
+a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 42%, transparent);
+  transition: text-decoration-color 120ms ease, color 120ms ease;
+}
+a:hover { text-decoration-color: currentColor; }
+a:active { color: var(--accent-deep); }
+
+/* Keyboard focus must be visible everywhere — part of "done" per the brief. */
+:focus-visible {
+  outline: 2.5px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Quotes. Short, exact, attributed, rare — the brief allows nothing longer,
+   so this is deliberately sized for a clause, not a paragraph. */
+blockquote {
+  margin-block: var(--gap-lg);
+  margin-inline: 0;
+  padding-inline-start: var(--gap-md);
+  border-inline-start: 2px solid var(--rule-strong);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+blockquote cite {
+  display: block;
+  margin-block-start: var(--gap-xs);
+  font-family: var(--font-site);
+  font-style: normal;
+  font-size: 0.82em;
+  color: var(--ink-faint);
+}
+
+/* Machinery set inline: an address, a value, a flag, a term of art. */
+code, kbd, samp, var {
+  font-family: var(--font-mach);
+  font-size: 0.88em;
+  font-variant-ligatures: none;
+}
+:not(pre) > code {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  padding: 0.12em 0.34em;
+  border-radius: 3px;
+  overflow-wrap: break-word;   /* same reason as .val above */
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin-block: var(--gap-xl);
+}
+
+/* Prose lists — the brief permits bullets only for genuinely enumerable
+   things, so these stay plain and unstyled beyond spacing. */
+:where(ol, ul):not([class]) {
+  margin-block: var(--gap-md);
+  padding-inline-start: 1.5em;
+}
+:where(ol, ul):not([class]) li { margin-block-end: var(--gap-xs); }
+:where(ol, ul):not([class]) :is(ol, ul) { margin-block: var(--gap-xs); }
+
+
+/* ==========================================================================
+   5 · LAYOUT
+   ========================================================================== */
+
+/* The skip link — first thing in the tab order, invisible until focused. */
+.skip {
+  position: absolute;
+  left: var(--gap-sm);
+  top: var(--gap-sm);
+  z-index: 100;
+  transform: translateY(-250%);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-site);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6em 1em;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: transform 140ms ease;
+}
+.skip:focus { transform: translateY(0); }
+
+/* One centred column. Blocks that need room bleed outward by --bleed rather
+   than the column widening, so the measure never changes as you scroll. */
+.site,
+main > * {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1.15rem;
+}
+
+main {
+  display: block;
+  padding-block: var(--gap-lg) var(--gap-2xl);
+}
+
+/* Site chrome — breadcrumb above, colophon below. Sans: this is the site. */
+header.site,
+footer.site {
+  font-family: var(--font-site);
+  font-size: 0.845rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.005em;
+}
+
+header.site {
+  padding-block: var(--gap-md);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45em;
+  border-block-end: 1px solid var(--rule);
+}
+header.site a {
+  color: var(--ink-soft);
+  text-decoration-color: transparent;
+  font-weight: 500;
+}
+header.site a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+footer.site {
+  margin-block-start: var(--gap-2xl);
+  padding-block: var(--gap-lg) var(--gap-xl);
+  border-block-start: 1px solid var(--rule);
+}
+footer.site p { margin-block-end: var(--gap-xs); }
+footer.site p:last-child { margin-block-end: 0; }
+
+/* The bleed utility, shared by every block that earns extra width. */
+.case-walk, .trace, .ratchet, .axes,
+figure, pre, table, .toc, .coverage-wrap, .support-wrap {
+  margin-inline: calc(-1 * var(--bleed));
+  width: calc(100% + 2 * var(--bleed));
+  max-width: calc(100% + 2 * var(--bleed));
+}
+
+
+/* ==========================================================================
+   6 · COMPONENTS
+   --------------------------------------------------------------------------
+   Voice, applied consistently:
+
+     serif  the book, and anything long-form the reader reads continuously
+     sans   the site — framing, labels, judgments, and anything scanned
+     mono   the machinery — values, addresses, step numbers, code
+
+   So #read is serif because it IS the book; #voice and #ledger are serif
+   because they are read continuously; #where and #carry are sans because
+   they are scaffolding a returning reader scans; #notes is sans AND recessed
+   because it is the site passing judgment, which must never be mistakable
+   for transmission.
+   ========================================================================== */
+
+/* --- 6.1 · the part page ------------------------------------------------ */
+
+/* The metadata line above the title: part n of m, kind, chapters, length. */
+.eyebrow {
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  font-weight: 550;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: var(--gap-sm);
+}
+.eyebrow > * + *::before { content: " · "; }
+
+.part > h1 { margin-block-end: var(--gap-lg); }
+
+.part > section { margin-block-start: var(--gap-xl); }
+.part > section > h2 { margin-block-start: 0; }
+
+/* #where and #carry — continuity scaffolding. The site talking, compactly,
+   so a reader returning after a week can re-enter without re-reading. */
+#where, #carry {
+  font-family: var(--font-site);
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  border-inline-start: 2px solid var(--rule-strong);
+  padding-inline-start: var(--gap-md);
+}
+#where > h2, #carry > h2,
+#voice > h2, #ledger > h2, #notes > h2 {
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  font-weight: 650;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: var(--gap-sm);
+}
+#where p, #carry p { margin-block-end: var(--gap-sm); }
+
+/* #read — the readthrough, 85%+ of the page. Its h2 is the dominant one. */
+#read > h2 {
+  font-size: clamp(1.4rem, 1.24rem + 0.72vw, 1.75rem);
+  padding-block-end: var(--gap-sm);
+  border-block-end: 1px solid var(--rule);
+}
+
+/* --- 6.2 · table of contents (required on parts over ~4,000 words) ------ */
+
+.toc {
+  font-family: var(--font-site);
+  font-size: 0.9rem;
+  background: var(--paper-sunk);
+  border-radius: var(--radius);
+  padding: var(--gap-md) var(--gap-md) var(--gap-md) var(--gap-lg);
+  margin-block: var(--gap-lg);
+}
+.toc > h2 {
+  font-family: var(--font-site);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 var(--gap-sm) -0.75rem;
+}
+.toc ol { list-style: none; padding: 0; margin: 0; }
+.toc li { margin-block-end: var(--gap-xs); }
+.toc li li { margin-inline-start: 1.1rem; font-size: 0.95em; }
+.toc a { color: var(--ink-soft); text-decoration-color: transparent; }
+.toc a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* --- 6.3 · CLAIM: the joint map ----------------------------------------
+   Numbered because the rest of the part refers to them by number, and given
+   stable ids (j1, j2 …) so prose can link straight to a joint. */
+
+ol.joints {
+  counter-reset: joint;
+  padding: 0;
+  margin-block: var(--gap-lg);
+}
+ol.joints > li {
+  position: relative;
+  padding-inline-start: 3.4rem;
+  margin-block-end: var(--gap-lg);
+  scroll-margin-block-start: var(--gap-md);
+}
+ol.joints > li:last-child { margin-block-end: 0; }
+ol.joints > li::before {
+  counter-increment: joint;
+  content: counter(joint);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.02em;
+  inline-size: 2.2rem;
+  block-size: 2.2rem;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mach);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-tint);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-radius: 50%;
+}
+/* Landing on a joint from a cross-reference should be obvious. */
+ol.joints > li:target::before {
+  color: var(--paper-raised);
+  background: var(--accent);
+}
+ol.joints > li > :is(h3, h4):first-child { margin-block-start: 0; }
+.joint-name {
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  font-weight: 650;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-block-end: var(--gap-xs);
+}
+
+/* Whether the joints are conjunctive or disjunctive, and which one is
+   load-bearing — the brief calls this the most valuable sentence on the
+   page, so it gets a treatment that stops the eye. */
+.joint-verdict {
+  font-family: var(--font-site);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--accent-tint);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--gap-sm) var(--gap-md);
+  margin-block: var(--gap-lg);
+}
+
+/* --- 6.4 · THE RAISED FAMILY: worked runs ------------------------------
+   .case-walk (a claim's case run through the joints) and .trace (a
+   mechanism run on a concrete input) do the same job in different material,
+   so they share one visual family: lifted off the page, indigo left-rule.
+   This is where understanding actually transfers, and it is what a reader
+   scanning back through a part is almost always hunting for. */
+
+.case-walk, .trace {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-inline-start: 3px solid var(--accent);
+  border-start-start-radius: 2px;
+  border-end-start-radius: 2px;
+  border-start-end-radius: var(--radius-lg);
+  border-end-end-radius: var(--radius-lg);
+  box-shadow: var(--lift);
+  padding: var(--gap-lg) var(--gap-md);
+  margin-block: var(--gap-xl);
+}
+
+/* The shared header, so both read as the same kind of object. */
+.case-walk > :is(h3, h4):first-of-type,
+.trace > :is(h3, h4):first-of-type {
+  margin-block-start: 0;
+  margin-block-end: var(--gap-md);
+  padding-block-end: var(--gap-sm);
+  border-block-end: 1px solid var(--rule);
+}
+.case-walk > :is(h3, h4)[data-label]:first-of-type::before,
+.trace > :is(h3, h4)[data-label]:first-of-type::before {
+  content: attr(data-label);
+  display: block;
+  font-family: var(--font-site);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-block-end: var(--gap-xs);
+}
+
+/* The contrast case is the mirror of the main walk — same family, neutral
+   rule, so it reads as "the same machinery, run the other way". */
+.case-walk.contrast {
+  border-inline-start-color: var(--rule-strong);
+}
+.case-walk.contrast > :is(h3, h4)[data-label]:first-of-type::before { color: var(--ink-faint); }
+
+/* Steps inside a worked run. Mono numerals: these are machinery. */
+.case-walk ol:not([class]),
+.trace ol:not([class]) {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin-block: var(--gap-md);
+}
+.case-walk ol:not([class]) > li,
+.trace ol:not([class]) > li {
+  position: relative;
+  padding-inline-start: 2.5rem;
+  margin-block-end: var(--gap-md);
+}
+.case-walk ol:not([class]) > li::before,
+.trace ol:not([class]) > li::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  inset-inline-start: 0;
+  font-family: var(--font-mach);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  padding-block-start: 0.22em;
+}
+
+/* A trace runs on real values, so its numbers get the machine face. */
+.trace { font-size: 0.965em; }
+.trace .val,
+.case-walk .val {
+  font-family: var(--font-mach);
+  font-size: 0.9em;
+  font-weight: 550;
+  color: var(--ink);
+  /* NOT nowrap. A value holding a whole expression cannot fit on a 360px
+     screen, and an unbreakable one pushes the page body sideways -- which is
+     forbidden. Values wrap at spaces; write short ones that must stay
+     together with &nbsp;, and break-word catches a single token longer than
+     the column. */
+  overflow-wrap: break-word;
+}
+
+
+/* --- 6.5 · MECHANISM: the ratchet --------------------------------------
+   Technical exposition works by escalation. Each turn has four moves, and
+   the four are labelled explicitly because the reader needs to feel the
+   problem before being handed the fix. */
+
+ol.ratchet {
+  counter-reset: turn;
+  padding: 0;
+  margin-block: var(--gap-lg);
+}
+ol.ratchet > li {
+  position: relative;
+  margin-block-end: var(--gap-lg);
+  padding: var(--gap-md) var(--gap-md) var(--gap-md) var(--gap-lg);
+  background: var(--paper-sunk);
+  border-radius: var(--radius);
+  border-inline-start: 2px solid var(--rule-strong);
+}
+ol.ratchet > li::before {
+  counter-increment: turn;
+  content: "Turn " counter(turn);
+  display: block;
+  font-family: var(--font-site);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: var(--gap-sm);
+}
+ol.ratchet > li > :is(h3, h4):first-of-type { margin-block-start: 0; }
+
+/* The four moves. A definition list is the honest markup here: each move is
+   a named term with a description. */
+dl.moves { margin-block: var(--gap-sm) 0; }
+dl.moves dt {
+  font-family: var(--font-site);
+  font-size: 0.73rem;
+  font-weight: 650;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-start: var(--gap-md);
+}
+dl.moves dt:first-child { margin-block-start: 0; }
+dl.moves dd { margin: var(--gap-xs) 0 0; }
+/* "What it costs" is the move readers skip and the one that makes a
+   mechanism choosable rather than merely describable. */
+dl.moves dt.cost { color: var(--accent); }
+dl.moves dd.cost { border-inline-start: 2px solid var(--accent-tint);
+                   padding-inline-start: var(--gap-sm); }
+
+/* --- 6.6 · TERRAIN: the axes -------------------------------------------
+   Stated before any item is described — they are the site's organising
+   claim about the space, not the book's table of contents. */
+
+ol.axes {
+  counter-reset: axis;
+  padding: 0;
+  margin-block: var(--gap-lg);
+}
+ol.axes > li {
+  position: relative;
+  padding-inline-start: 3.4rem;
+  margin-block-end: var(--gap-md);
+}
+ol.axes > li::before {
+  counter-increment: axis;
+  content: counter(axis, upper-alpha);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.02em;
+  inline-size: 2.2rem;
+  block-size: 2.2rem;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mach);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+}
+.axis-name {
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  font-weight: 650;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-block-end: var(--gap-xs);
+}
+
+/* --- 6.7 · tables: .support, .costs, .placements ------------------------
+   The accounting layer of all three kinds. One treatment, since they are
+   the same kind of object: a per-item reckoning. */
+
+.support-wrap, .coverage-wrap, .table-wrap {
+  overflow-x: auto;                /* the TABLE scrolls, never the page body */
+  -webkit-overflow-scrolling: touch;
+  margin-block: var(--gap-lg);
+}
+
+table.support, table.costs, table.placements, table.coverage {
+  width: 100%;
+  font-family: var(--font-site);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: start;
+  border-block-start: 1px solid var(--rule-strong);
+  border-block-end: 1px solid var(--rule-strong);
+}
+:is(table.support, table.costs, table.placements, table.coverage) caption {
+  font-family: var(--font-site);
+  font-size: 0.73rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: start;
+  padding-block-end: var(--gap-sm);
+}
+:is(table.support, table.costs, table.placements, table.coverage) th {
+  font-weight: 650;
+  text-align: start;
+  color: var(--ink);
+  vertical-align: bottom;
+  padding: var(--gap-sm) var(--gap-md) var(--gap-sm) 0;
+  border-block-end: 1px solid var(--rule-strong);
+  white-space: nowrap;
+}
+:is(table.support, table.costs, table.placements, table.coverage) td {
+  vertical-align: baseline;
+  padding: var(--gap-sm) var(--gap-md) var(--gap-sm) 0;
+  border-block-start: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+:is(table.support, table.costs, table.placements, table.coverage) tbody th {
+  border-block-start: 1px solid var(--rule);
+  border-block-end: 0;
+  color: var(--ink);
+  padding-inline-end: var(--gap-md);
+}
+:is(table.support, table.costs, table.placements) td:last-child,
+:is(table.support, table.costs, table.placements) th:last-child { padding-inline-end: 0; }
+
+/* Evidence type and cost currency read as machinery, not prose. */
+.evidence, .currency, .placement {
+  font-family: var(--font-mach);
+  font-size: 0.84em;
+  font-weight: 550;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* --- 6.8 · THE RECESSED FAMILY: the site's own voice --------------------
+   aside.note is the visible boundary between the book and the site's
+   opinion of it. Three independent signals, so it can never be mistaken for
+   body text: it is set INTO the page, it is in the site's face rather than
+   the book's, and it carries a label. Deliberately no chromatic accent — a
+   note is marginalia in a different hand, not a callout box shouting. */
+
+aside.note {
+  background: var(--paper-sunk);
+  box-shadow: var(--press);
+  border-radius: var(--radius);
+  padding: var(--gap-md) var(--gap-md) var(--gap-md) var(--gap-lg);
+  margin-block: var(--gap-lg);
+  font-family: var(--font-site);
+  font-size: 0.925rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+aside.note p { margin-block-end: var(--gap-sm); }
+aside.note p:last-child { margin-block-end: 0; }
+aside.note :is(h3, h4) {
+  font-family: var(--font-site);
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+aside.note a { color: var(--accent); }
+
+.note-label {
+  font-family: var(--font-site);
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.115em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 var(--gap-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+}
+/* A rule running off to the right, so the label reads as a margin mark. */
+.note-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+/* #notes — the gathered evaluation layer at the foot of a part. The whole
+   section is recessed, for the same reason a single note is. */
+#notes {
+  background: var(--paper-sunk);
+  box-shadow: var(--press);
+  border-radius: var(--radius);
+  padding: var(--gap-md) var(--gap-md) var(--gap-md) var(--gap-lg);
+  font-family: var(--font-site);
+  font-size: 0.925rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+#notes :is(h3, h4) { font-family: var(--font-site); color: var(--ink); }
+/* A note inside the notes section would be a box in a box: flatten it. */
+#notes aside.note {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin-block: var(--gap-lg) 0;
+  border-block-start: 1px solid var(--rule-strong);
+  padding-block-start: var(--gap-md);
+}
+
+
+/* --- 6.9 · figures ------------------------------------------------------
+   Figures are content, not decoration, and are hand-authored inline SVG.
+   The helper classes below exist so a figure draws itself from the theme
+   tokens: a figure with hardcoded fills is unreadable in dark mode, and
+   there is no build step that could rewrite it. */
+
+figure { margin-block: var(--gap-xl); }
+figure > svg {
+  inline-size: 100%;
+  block-size: auto;
+  /* SVG text scales with the drawing, so a wide viewBox becomes illegible on
+     a phone. Figures are therefore authored at a ~420-unit viewBox width and
+     capped here, which keeps labels between ~12px at 360px and ~20px on a
+     desktop — legible at both ends without a second drawing. */
+  max-inline-size: 34rem;
+  margin-inline: auto;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--gap-md);
+  color: var(--ink);
+}
+figcaption {
+  font-family: var(--font-site);
+  font-size: 0.845rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  margin-block-start: var(--gap-sm);
+}
+figcaption b, figcaption strong { color: var(--ink-soft); font-weight: 650; }
+
+/* Theme-aware SVG primitives. Figures use these, never literal colours. */
+.fig-label  { font-family: var(--font-site); font-size: 15px; font-weight: 550;
+              fill: var(--ink); }
+.fig-sub    { font-family: var(--font-site); font-size: 12.5px; fill: var(--ink-faint); }
+.fig-val    { font-family: var(--font-mach); font-size: 13px; font-weight: 550;
+              fill: var(--ink); }
+.fig-box    { fill: var(--paper-sunk); stroke: var(--rule-strong); stroke-width: 1; }
+.fig-box-hi { fill: var(--accent-tint); stroke: var(--accent); stroke-width: 1.25; }
+.fig-line   { stroke: var(--rule-strong); stroke-width: 1.25; fill: none; }
+.fig-flow   { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+.fig-arrow  { fill: var(--accent); }
+
+/* --- 6.10 · code -------------------------------------------------------
+   Reimplemented, never transcribed. Highlighting is hand-applied or absent;
+   there is no JS to do it, by design. */
+
+pre {
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--gap-md);
+  margin-block: var(--gap-lg);
+  overflow-x: auto;                  /* the BLOCK scrolls, never the page */
+  -webkit-overflow-scrolling: touch;
+}
+pre code {
+  display: block;
+  font-family: var(--font-mach);
+  font-size: 0.82rem;
+  line-height: 1.62;
+  white-space: pre;
+  color: var(--ink);
+  background: none;
+  padding: 0;
+}
+/* Hand-applied tokens. Kept to five, because more is a lie about how much
+   syntax colour helps a reader who is not editing the code. */
+pre .c  { color: var(--ink-faint); font-style: italic; }   /* comment  */
+pre .k  { color: var(--accent); font-weight: 600; }        /* keyword  */
+pre .s  { color: var(--d-full); }                          /* string   */
+pre .n  { color: var(--d-folded); }                        /* number   */
+pre .hl { background: var(--accent-tint); display: inline-block;
+          inline-size: 100%; }                             /* the line that matters */
+
+/* --- 6.11 · footnotes ---------------------------------------------------
+   sup/a pairs with return links, round-tripping with :target and no JS. */
+
+sup.fnref { font-family: var(--font-site); font-weight: 600; }
+sup.fnref a { text-decoration: none; padding-inline: 0.15em; }
+sup.fnref a:hover { text-decoration: underline; }
+
+.footnotes {
+  margin-block-start: var(--gap-xl);
+  padding-block-start: var(--gap-md);
+  border-block-start: 1px solid var(--rule);
+  font-family: var(--font-site);
+  font-size: 0.87rem;
+  line-height: 1.58;
+  color: var(--ink-soft);
+}
+.footnotes > h2 {
+  font-family: var(--font-site);
+  font-size: 0.73rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block: 0 var(--gap-sm);
+}
+.footnotes ol { padding-inline-start: 1.5em; margin: 0; }
+.footnotes li {
+  margin-block-end: var(--gap-sm);
+  scroll-margin-block-start: var(--gap-lg);
+  border-radius: 3px;
+}
+/* Landing on a footnote, and getting back, both have to be obvious. */
+.footnotes li:target {
+  background: var(--accent-tint);
+  box-shadow: 0 0 0 0.45em var(--accent-tint);
+}
+.fn-back { text-decoration: none; margin-inline-start: 0.45em; font-weight: 700; }
+.fn-back:hover { text-decoration: underline; }
+
+/* --- 6.12 · pager ------------------------------------------------------ */
+
+.pager {
+  display: flex;
+  gap: var(--gap-md);
+  margin-block-start: var(--gap-2xl);
+  padding-block-start: var(--gap-lg);
+  border-block-start: 1px solid var(--rule);
+  font-family: var(--font-site);
+}
+.pager a {
+  flex: 1 1 0;
+  display: block;
+  padding: var(--gap-sm) var(--gap-md);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--paper-raised);
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.pager a:hover { border-color: var(--accent); background: var(--accent-tint); }
+.pager a[rel="next"] { text-align: end; }
+.pager a[rel="prev"] + a[rel="next"] { margin-inline-start: auto; }
+.pager a:only-child[rel="next"] { margin-inline-start: auto; flex-grow: 0; }
+.pager .dir {
+  display: block;
+  font-size: 0.71rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: 0.15em;
+}
+.pager .lbl { font-size: 0.94rem; font-weight: 550; line-height: 1.35; }
+
+/* --- 6.13 · coverage table ---------------------------------------------
+   Every chapter of the book, with a disposition. Silently dropping a
+   chapter is the one unrecoverable failure, so this table is the gate.
+   Disposition is stated in WORDS first; the shape and colour are redundant
+   reinforcement, never the only signal. */
+
+.disp {
+  font-family: var(--font-mach);
+  font-size: 0.78em;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  white-space: nowrap;
+}
+.disp::before {
+  content: "";
+  inline-size: 0.66em;
+  block-size: 0.66em;
+  flex: none;
+}
+.disp-full      { color: var(--d-full); }
+.disp-full::before      { background: currentColor; border-radius: 50%; }
+.disp-condensed { color: var(--d-condensed); }
+.disp-condensed::before { border-radius: 50%;
+                          background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+                          box-shadow: inset 0 0 0 1.5px currentColor; }
+.disp-folded    { color: var(--d-folded); }
+.disp-folded::before    { background: currentColor; rotate: 45deg; }
+.disp-readit    { color: var(--d-readit); }
+.disp-readit::before    { border-radius: 50%; box-shadow: inset 0 0 0 1.75px currentColor; }
+
+table.coverage td .why {
+  display: block;
+  font-size: 0.94em;
+  color: var(--ink-faint);
+  margin-block-start: 0.15em;
+}
+
+
+/* --- 6.14 · the shelf (index.html) --------------------------------------
+   Regenerated by hand from the meta.json files — never client-side, because
+   that would need fetch(), which breaks file:// and is forbidden outright. */
+
+.lede {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-block: var(--gap-md) var(--gap-xl);
+}
+.lede strong { color: var(--ink); font-weight: 620; }
+
+.domain { margin-block-start: var(--gap-xl); }
+.domain > h2 {
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-block-end: var(--gap-sm);
+  border-block-end: 1px solid var(--rule);
+  margin-block-end: var(--gap-md);
+}
+
+.shelf { display: grid; gap: var(--gap-md); }
+
+.book-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md);
+  box-shadow: var(--lift);
+}
+.book-card > h3 { margin-block: 0 0.1em; font-size: 1.22rem; }
+.book-card > h3 a { text-decoration-color: transparent; }
+.book-card > h3 a:hover { text-decoration-color: currentColor; }
+.book-card .byline {
+  font-family: var(--font-site);
+  font-size: 0.87rem;
+  color: var(--ink-faint);
+  margin-block-end: var(--gap-sm);
+}
+.book-card .blurb {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin-block-end: var(--gap-sm);
+}
+
+/* The stat strip: parts and kind mix, words, reading time, coverage. */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45em 1.15em;
+  font-family: var(--font-site);
+  font-size: 0.79rem;
+  color: var(--ink-faint);
+  padding-block: var(--gap-sm);
+  border-block-start: 1px solid var(--rule);
+}
+.stats b {
+  font-family: var(--font-mach);
+  font-weight: 600;
+  color: var(--ink);
+}
+.stats .kinds { display: inline-flex; gap: 0.4em; }
+.kind-tag {
+  font-family: var(--font-mach);
+  font-size: 0.95em;
+  font-weight: 600;
+  padding: 0.05em 0.4em;
+  border-radius: 3px;
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* Whether the book itself is still required — stated honestly, on the card
+   and again on the book index. It is the one thing a reader most needs. */
+.required {
+  font-family: var(--font-site);
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  box-shadow: var(--press);
+  border-radius: var(--radius);
+  padding: var(--gap-sm) var(--gap-md);
+  margin-block-start: var(--gap-sm);
+}
+.required b {
+  display: block;
+  font-family: var(--font-site);
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: 0.2em;
+}
+
+.prereq {
+  font-family: var(--font-site);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-block-start: var(--gap-xs);
+}
+
+/* The shelf is complete but bookless at bootstrap. Say so plainly. */
+.empty {
+  font-family: var(--font-site);
+  font-size: 0.94rem;
+  color: var(--ink-faint);
+  background: var(--paper-sunk);
+  box-shadow: var(--press);
+  border-radius: var(--radius);
+  padding: var(--gap-lg) var(--gap-md);
+  text-align: center;
+}
+
+/* --- 6.15 · the book index page ---------------------------------------- */
+
+.parts-list { margin-block: var(--gap-lg); display: grid; gap: var(--gap-sm); }
+.part-entry {
+  display: block;
+  padding: var(--gap-sm) var(--gap-md);
+  border: 1px solid var(--rule);
+  border-inline-start: 3px solid var(--rule-strong);
+  border-radius: 2px var(--radius) var(--radius) 2px;
+  background: var(--paper-raised);
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-inline-start-color 120ms ease, background 120ms ease;
+}
+.part-entry:hover {
+  border-inline-start-color: var(--accent);
+  background: var(--accent-tint);
+}
+.part-entry .num {
+  font-family: var(--font-mach);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+.part-entry .title { display: block; font-weight: 620; margin-block: 0.1em 0.15em; }
+.part-entry .sub {
+  display: block;
+  font-family: var(--font-site);
+  font-size: 0.81rem;
+  color: var(--ink-faint);
+}
+
+/* Kind badges, used on part entries and in the eyebrow. */
+.kind {
+  font-family: var(--font-mach);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.1em 0.45em;
+  border-radius: 3px;
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+/* --- 6.16 · about.html: the five tests ---------------------------------- */
+
+table.tests {
+  width: 100%;
+  font-family: var(--font-site);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-block: var(--gap-lg);
+  border-block: 1px solid var(--rule-strong);
+}
+table.tests th {
+  text-align: start;
+  vertical-align: top;
+  font-weight: 650;
+  color: var(--ink);
+  padding: var(--gap-sm) var(--gap-md) var(--gap-sm) 0;
+  border-block-end: 1px solid var(--rule-strong);
+  white-space: nowrap;
+}
+table.tests td {
+  vertical-align: top;
+  color: var(--ink-soft);
+  padding: var(--gap-sm) var(--gap-md) var(--gap-sm) 0;
+  border-block-start: 1px solid var(--rule);
+}
+table.tests tbody th {
+  border-block-start: 1px solid var(--rule);
+  border-block-end: 0;
+}
+table.tests td:last-child, table.tests th:last-child { padding-inline-end: 0; }
+
+/* --- 6.17 · small screens ----------------------------------------------
+   Comfortable at 360px is part of "done". The rule that matters: content
+   that cannot shrink scrolls inside its own box, and the page body never
+   scrolls sideways. */
+
+@media (max-width: 34rem) {
+  .case-walk, .trace, aside.note, #notes, ol.ratchet > li, .toc {
+    padding-inline: var(--gap-md);
+  }
+  ol.joints > li, ol.axes > li { padding-inline-start: 2.7rem; }
+  ol.joints > li::before, ol.axes > li::before {
+    inline-size: 1.85rem; block-size: 1.85rem; font-size: 0.84rem;
+  }
+  .pager { flex-direction: column; }
+  .pager a[rel="next"] { text-align: start; }
+  .pager a:only-child[rel="next"] { margin-inline-start: 0; }
+  .stats { gap: 0.3em 0.9em; }
+  pre code { font-size: 0.78rem; }
+}
+
+
+/* ==========================================================================
+   7 · PRINT
+   --------------------------------------------------------------------------
+   A part is a long document and should print as one.
+
+   The important problem: browsers omit background graphics by default, so
+   the sunk/raised grounds that carry the entire design on screen simply do
+   not exist on paper. The two surfaces are therefore RE-ENCODED as borders
+   here — the site's voice gets a full box with a rule above its label, the
+   worked runs get a heavy left bar. The distinction survives; only its
+   mechanism changes.
+   ========================================================================== */
+
+@media print {
+  @page {
+    margin: 18mm 16mm 20mm;
+  }
+
+  :root {
+    --paper: #fff;
+    --paper-sunk: #fff;
+    --paper-raised: #fff;
+    --ink: #111;
+    --ink-soft: #333;
+    --ink-faint: #555;
+    --rule: #bbb;
+    --rule-strong: #888;
+    --accent: #111;
+    --accent-deep: #000;
+    --accent-tint: #fff;
+    --lift: none;
+    --press: none;
+    --bleed: 0rem;
+  }
+
+  body {
+    font-size: 10.75pt;
+    line-height: 1.5;
+    color: #111;
+    background: #fff;
+  }
+
+  /* Navigation is meaningless on paper. */
+  .skip, .pager, header.site nav, .to-top { display: none !important; }
+
+  header.site {
+    border-block-end: 0.5pt solid #888;
+    padding-block: 0 4pt;
+    font-size: 8pt;
+  }
+  footer.site {
+    border-block-start: 0.5pt solid #888;
+    margin-block-start: 12pt;
+    font-size: 8pt;
+  }
+
+  main > * { max-width: none; padding-inline: 0; }
+
+  h1 { font-size: 20pt; }
+  h2 { font-size: 14pt; }
+  h3 { font-size: 11.5pt; }
+  /* Never strand a heading at the foot of a page. */
+  h1, h2, h3, h4 { break-after: avoid-page; break-inside: avoid; }
+  p { orphans: 3; widows: 3; }
+
+  /* The site's voice: a full box, since it can no longer be a sunk ground. */
+  aside.note, #notes {
+    border: 0.75pt solid #888;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8pt 10pt;
+    break-inside: avoid;
+    font-size: 9.5pt;
+  }
+  .note-label { color: #000; }
+  .note-label::after { background: #888; }
+  #notes aside.note { border: 0; border-block-start: 0.5pt solid #bbb; padding: 8pt 0 0; }
+
+  /* The worked runs: a heavy left bar, since they can no longer be raised. */
+  .case-walk, .trace {
+    border: 0.5pt solid #bbb;
+    border-inline-start: 3pt solid #111;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8pt 10pt;
+    break-inside: avoid;
+  }
+  .case-walk.contrast { border-inline-start: 3pt double #555; }
+
+  ol.ratchet > li {
+    border-inline-start: 1.5pt solid #555;
+    background: none;
+    break-inside: avoid;
+    padding: 6pt 0 6pt 10pt;
+  }
+
+  /* Figures are content; they print. */
+  figure, table, pre, ol.joints > li, ol.axes > li {
+    break-inside: avoid;
+  }
+  figure > svg {
+    border: 0.5pt solid #bbb;
+    padding: 6pt;
+    max-block-size: 150mm;
+  }
+  figcaption { font-size: 8.5pt; color: #333; }
+
+  /* Joint and axis markers need ink to remain circles. */
+  ol.joints > li::before {
+    background: none;
+    border: 1pt solid #111;
+    color: #111;
+  }
+  ol.axes > li::before { background: none; border: 1pt solid #111; color: #111; }
+  .joint-verdict {
+    background: none;
+    border: 0.75pt solid #111;
+    border-inline-start-width: 3pt;
+    padding: 6pt 10pt;
+    break-inside: avoid;
+  }
+
+  pre {
+    background: none;
+    border: 0.5pt solid #bbb;
+    font-size: 8.5pt;
+    white-space: pre-wrap;    /* nothing can scroll on paper */
+    word-break: break-word;
+  }
+  pre code { white-space: pre-wrap; font-size: 8.5pt; }
+  pre .hl { background: none; box-shadow: inset 0 0 0 0.5pt #888; }
+
+  /* Table headers repeat across page breaks. */
+  thead { display: table-header-group; }
+  table { break-inside: auto; font-size: 9pt; }
+  tr { break-inside: avoid; }
+  .support-wrap, .coverage-wrap, .table-wrap { overflow: visible; }
+
+  /* Disposition marks are semantic and tiny — worth forcing ink for. */
+  .disp::before { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+  a { color: #111; text-decoration: underline; }
+  /* Internal links are noise on paper; external ones are a citation. */
+  a[href^="http"]::after {
+    content: " <" attr(href) ">";
+    font-family: var(--font-mach);
+    font-size: 8pt;
+    color: #555;
+    word-break: break-all;
+  }
+
+  .footnotes { break-before: auto; font-size: 9pt; }
+  .footnotes li:target { background: none; box-shadow: none; }
+
+  .book-card, .part-entry {
+    border: 0.5pt solid #bbb;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  .required { border: 0.5pt solid #888; box-shadow: none; }
+  .toc { border: 0.5pt solid #bbb; background: none; break-inside: avoid; }
+}

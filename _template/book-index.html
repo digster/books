@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Template · book index — The Understudy</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- In a real book folder this is ../../index.html — one level deeper. -->
+  <header class="site">
+    <a href="../index.html">The Understudy</a> /
+    <a href="part.html">Templates</a> /
+    <span>book index</span>
+  </header>
+
+  <main id="main">
+    <article class="part">
+      <p class="eyebrow">
+        <span>Author</span><span>Year</span><span>n parts</span><span>~23,800 words</span><span>~108 min</span>
+      </p>
+
+      <h1 id="h-title">Book Title</h1>
+
+      <section id="orientation">
+        <h2 id="h-orientation">Orientation</h2>
+        <p>What kind of book this is and what it is trying to do. What world
+        it came out of — the argument it was written against, the discipline
+        it was addressed to, what was assumed common knowledge at the time
+        and no longer is. What a reader needs before starting, stated
+        honestly: if the book assumes a field's vocabulary, say which, and
+        supply it here rather than leaving the reader to discover the gap
+        four parts in.</p>
+        <p>Also: which edition these pages follow, since chapter numbering
+        and sometimes content differ between them.</p>
+      </section>
+
+      <section id="arc">
+        <h2 id="h-arc">The arc</h2>
+        <p>How the exposition actually moves, start to finish, in a few
+        paragraphs. This is the map a reader holds while reading the parts,
+        and it is the difference between a sequence of pages and a book.
+        Say where the argument turns, where it consolidates, and where it
+        does something the reader will not expect from the opening.</p>
+        <p>Write this as continuous prose. A bulleted arc is a table of
+        contents, and the book already has one of those.</p>
+      </section>
+
+      <section id="how">
+        <h2 id="h-how">How to read this one</h2>
+        <p>Whether the parts follow the book's order or a better one.
+        Reordering is allowed and is sometimes correct — but doing it
+        silently is not, so if the order changed, give the mapping and the
+        reason.</p>
+
+        <div class="case-walk">
+          <h3 id="h-mapping" data-label="If reordered">The mapping</h3>
+          <div class="table-wrap">
+            <table class="placements">
+              <thead>
+                <tr><th scope="col">Part</th><th scope="col">Book chapter</th><th scope="col">Why moved</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">3</th><td>chapter 6</td><td>The mechanism it explains is assumed by chapters 4 and 5, which the book leaves the reader to infer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= THE COVERAGE TABLE =================
+           The gate. Every chapter of the book appears here with one of four
+           dispositions, and anything below `full` carries a stated reason.
+           Silently dropping a chapter is the one unrecoverable failure. -->
+      <section id="coverage">
+        <h2 id="h-coverage">Coverage</h2>
+        <p>Every chapter, with its disposition. Anything short of
+        <span class="disp disp-full">full</span> says why.</p>
+
+        <div class="coverage-wrap">
+          <table class="coverage">
+            <caption>Every chapter accounted for</caption>
+            <thead>
+              <tr>
+                <th scope="col">Ch.</th>
+                <th scope="col">Title</th>
+                <th scope="col">Disposition</th>
+                <th scope="col">Where it lives</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Chapter title</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="part-claim.html">Part 1</a></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Chapter title</td>
+                <td><span class="disp disp-condensed">condensed</span></td>
+                <td><a href="part-claim.html">Part 1</a>
+                  <span class="why">Largely restates chapter 1 with a second
+                  set of examples; the examples are carried, the argument is
+                  not repeated.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Chapter title</td>
+                <td><span class="disp disp-folded">folded</span></td>
+                <td><a href="part-mechanism.html">Part 2</a>
+                  <span class="why">Splitting it from the mechanism it
+                  motivates hurt comprehension, so it opens Part 2.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Chapter title</td>
+                <td><span class="disp disp-readit">read&nbsp;it</span></td>
+                <td>—
+                  <span class="why">The effect is cumulative and comes from
+                  living inside the argument for forty pages. What is in it:
+                  … . What does not survive the transfer: … .</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>A <span class="disp disp-readit">read&nbsp;it</span> disposition
+          is not a failure of the page. Some chapters cannot be transmitted
+          this way — where the prose <em>is</em> the payload, where the effect
+          comes from accumulation or voice. Saying so plainly, and saying
+          what specifically does not survive, is the honest move. Concealing
+          it is not.</p>
+        </aside>
+      </section>
+
+      <section id="parts">
+        <h2 id="h-parts">The parts</h2>
+
+        <div class="parts-list">
+          <a class="part-entry" href="part-claim.html">
+            <span class="num">Part 1</span>
+            <span class="title">The part's title</span>
+            <span class="sub"><span class="kind">claim</span> · covers chapters 1–2 · ~26 min</span>
+          </a>
+          <a class="part-entry" href="part-mechanism.html">
+            <span class="num">Part 2</span>
+            <span class="title">The part's title</span>
+            <span class="sub"><span class="kind">mechanism</span> · covers chapter 3 · ~31 min</span>
+          </a>
+          <a class="part-entry" href="part-terrain.html">
+            <span class="num">Part 3</span>
+            <span class="title">The part's title</span>
+            <span class="sub"><span class="kind">terrain</span> · covers chapter 5 · ~19 min</span>
+          </a>
+        </div>
+
+        <p>Then the two pages that close a book:
+        <a href="part.html">the afterword</a>, which gathers the
+        meta-evaluation so it cannot contaminate the reading, and
+        <a href="part.html">the glossary</a> of the book's own vocabulary.</p>
+      </section>
+
+      <section id="still-required">
+        <h2 id="h-still-required">Is the book still required?</h2>
+
+        <p class="required">
+          <b>Still required</b>
+          Answer this honestly and specifically. Name the chapters that did
+          not transmit and say what is in them. If the answer is no — if
+          these pages genuinely carry the book — say that too, because a
+          reader deciding how to spend nine hours deserves a straight answer
+          rather than a courtesy.
+        </p>
+
+        <p>And point at the book. Every book index links to where it can be
+        bought or borrowed; where a book is distributed free by its authors,
+        link there and say so.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site">
+    <p>The Understudy — a template page, not book content.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part templates — The Understudy</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../index.html">The Understudy</a> /
+    <span>Templates</span>
+  </header>
+
+  <main id="main">
+    <article class="part">
+      <p class="eyebrow"><span>Templates</span><span>not book content</span></p>
+
+      <h1 id="h-title">Part templates, one per kind</h1>
+
+      <section id="where">
+        <h2 id="h-where">What these are</h2>
+        <p>Three part templates, one for each kind of material, plus the book
+        index template and <code>meta.json</code>. They double as the
+        stylesheet's proving ground: between them they exercise every
+        component in <code>assets/style.css</code>. Copy the variant that
+        matches the part you are writing and replace the placeholder prose —
+        which is written <em>about the template</em> precisely so that no
+        book content lives here.</p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The shared skeleton</h2>
+
+        <p>Every part page, whatever its kind, has the same bones: a skip
+        link, a breadcrumb header, one <code>&lt;h1&gt;</code>, an
+        <code>article.part</code> carrying <code>data-kind</code>, the six
+        sections in order, a pager, and a site footer. Only the contents of
+        <code>#read</code> differ by kind, and the difference is not
+        cosmetic — it is what the kind is <em>for</em>.</p>
+
+        <div class="table-wrap">
+          <table class="placements">
+            <caption>What <code>#read</code> must contain, by kind</caption>
+            <thead>
+              <tr>
+                <th scope="col">Kind</th>
+                <th scope="col">Decomposition</th>
+                <th scope="col">Concrete run</th>
+                <th scope="col">Accounting</th>
+                <th scope="col">Test it must pass</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="part-claim.html">claim</a></th>
+                <td><code>ol.joints</code> — the joint map</td>
+                <td><code>.case-walk</code> — the case walked</td>
+                <td><code>table.support</code> — the support ledger</td>
+                <td><span class="placement">contrast</span></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="part-mechanism.html">mechanism</a></th>
+                <td><code>ol.ratchet</code> — the ratchet</td>
+                <td><code>.trace</code> — the trace</td>
+                <td><code>table.costs</code> — the cost sheet</td>
+                <td><span class="placement">variation</span></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="part-terrain.html">terrain</a></th>
+                <td><code>ol.axes</code> — the axes</td>
+                <td><code>table.placements</code> — items placed</td>
+                <td>the trade-off across axes</td>
+                <td><span class="placement">placement</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Most parts are mixed. Declare the dominant kind in
+        <code>data-kind</code> and satisfy the requirements of any kind
+        genuinely present — a mechanism part that also lays out a small
+        landscape needs axes as well as a ratchet.</p>
+
+        <div class="case-walk">
+          <h3 id="h-copying" data-label="How to use one">Copying a template</h3>
+          <ol>
+            <li>Copy the variant matching the part's dominant kind into
+            <span class="val">books/&lt;slug&gt;/NN-&lt;part-slug&gt;.html</span>.</li>
+            <li>Fix the two relative paths: the stylesheet becomes
+            <span class="val">../../assets/style.css</span> and the
+            breadcrumb gains a level. Templates sit one directory shallower
+            than parts do.</li>
+            <li>Replace the <code>.eyebrow</code> cells, the
+            <code>&lt;h1&gt;</code>, and the <code>&lt;title&gt;</code>.</li>
+            <li>Build the decomposition and the concrete run <em>first</em>.
+            They are the spine; prose written before them tends to describe
+            conclusions rather than reach them.</li>
+            <li>Point the pager at the real neighbours, and update the
+            previous part's <code>rel="next"</code> to match.</li>
+            <li>Run <span class="val">uv run tools/check.py</span>.</li>
+          </ol>
+        </div>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>The brief lists a single <code>part.html</code> holding all
+          three variants. Three part titles in one file would mean three
+          <code>&lt;h1&gt;</code>s, which the same brief forbids — or
+          demoting every section heading a level, which would stop the real
+          CSS selectors from being exercised at all. Splitting into three
+          files keeps both rules intact and makes each variant a working
+          page rather than a fragment.</p>
+        </aside>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">A note on the placeholder prose</h2>
+        <p>The filler in these templates describes what belongs in the slot
+        it occupies, rather than being lorem ipsum. That keeps two promises
+        at once: no book content appears in the bootstrap, and the typography
+        is tested against real English — with the em-dashes, numerals,
+        italicised terms, inline code, and footnote markers that actually
+        stress a stylesheet.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What these templates do not decide</h2>
+        <p>Part boundaries, ordering, and kind are decisions made in the
+        coverage plan, before any template is copied. A template can enforce
+        that a claim part has a contrast case; it cannot tell you whether
+        this material is a claim.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>These pages are deliberately excluded from the shelf. They are
+        development scaffolding, and <code>_template/</code> is not linked
+        from <code>index.html</code> — reach them from the README or
+        directly.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">Next</h2>
+        <p>The three part variants below, then
+        <a href="book-index.html">the book index template</a> and
+        <a href="meta.json">meta.json</a>.</p>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Templates">
+      <a rel="next" href="part-claim.html"><span class="dir">Next</span><span class="lbl">Claim template</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p>The Understudy — templates, not book content.</p>
+  </footer>
+</body>
+</html>
