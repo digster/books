@@ -11,6 +11,15 @@ The full brief lives in **[CLAUDE.md](CLAUDE.md)** — mission, the five tests,
 the three kinds of material, the writing standard, and the definition of done.
 Read it before writing any book content.
 
+> **This repo is `digster/books` — The Understudy.** It is *not*
+> [`digster/book-reviews`](https://github.com/digster/book-reviews), which is a
+> separate site of book **reviews** with a home feed and categories. That
+> project occupied this folder (`my docs/books`) until it was renamed on
+> 2026-08-18, and The Understudy was copied in from `~/lab/books` on
+> 2026-08-25 — so session history, transcripts and tooling keyed to this path
+> may still surface the other project's work. A review is a verdict; a
+> readthrough is a transmission. They share nothing but a subject.
+
 ---
 
 ## Status

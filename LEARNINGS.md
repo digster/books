@@ -105,3 +105,20 @@ was removed.
 GitHub Pages runs Jekyll by default, and Jekyll skips directories beginning
 with an underscore — which would make `_template/` vanish from a deployed
 site.
+
+## A folder path is not a project identity
+
+This repo lives at `my docs/books`, a path previously occupied by a *different*
+project — `digster/book-reviews`, renamed away on 2026-08-18. The Understudy
+was then bootstrapped at `~/lab/books` and copied in on 2026-08-25. Claude Code
+keys sessions, transcripts and per-project memory by absolute path alone, with
+no repo UUID and no remote check, so two unrelated projects ended up sharing one
+history: renaming a folder orphans its past under the old slug, and reusing a
+freed path silently inherits that slug's contents. The give-away was a session
+titled "Home feed post duplication" — this site has no feed and no posts.
+
+**Rule:** trust the git remote and `README.md`, not the folder name or the
+session list, when identifying which project you are in. Anything about a home
+feed, post categories or review posts belongs to `book-reviews`. Markers that
+must survive a move go in git-tracked files; `~/.claude` memory is keyed by the
+very thing that breaks.
