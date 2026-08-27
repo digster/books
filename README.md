@@ -24,10 +24,15 @@ Read it before writing any book content.
 
 ## Status
 
-**Bootstrap complete (Task A).** The tree, the stylesheet, the three part
-templates, the book-index template, and the site chrome are built and
-verified. **No book content has been written yet** — the shelf is complete but
-empty, by design.
+**Bootstrap complete (Task A), one book on the shelf.** The tree, the
+stylesheet, the three part templates, the book-index template and the site
+chrome are built and verified.
+
+The first readthrough is **Andy Clark, *Surfing Uncertainty* (2016)** — ten
+parts, 34,569 words, four mechanism parts, four claim parts and two terrain
+parts, with every chapter accounted for in the coverage table and none marked
+`read-it`. It exercises all three kinds of material and all four figures, so
+it doubles as the proof that the apparatus works on a real book.
 
 ---
 

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part 2 · The prediction machine — Surfing Uncertainty</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../../index.html">The Understudy</a> /
+    <a href="index.html">Surfing Uncertainty</a> /
+    <span>Part 2</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="mechanism">
+      <p class="eyebrow">
+        <span>Part 2 of 10</span><span>mechanism</span><span>covers chapter 1 and appendix 2</span><span>~17 min</span>
+      </p>
+
+      <h1 id="h-title">The prediction machine</h1>
+
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p><a href="01-the-ambitious-thesis.html">Part&nbsp;1</a> laid out five
+        joints and named joint&nbsp;3 — that only the residual travels
+        forward — as the one that turns an old philosophical doctrine into a
+        testable claim about cortex. This part builds the architecture that
+        joints 2 and 3 describe. The aim is that you could draw it from
+        memory and narrate one complete operation through it, because
+        everything in the remaining eight parts is this machine with one
+        parameter changed.</p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-ratchet">The ratchet</a></li>
+            <li><a href="#h-figure">The shape of it</a></li>
+            <li><a href="#h-trace">The trace: a bar that ends</a></li>
+            <li><a href="#h-code">The smallest version that shows it</a></li>
+            <li><a href="#h-free-energy">Where free energy comes in</a></li>
+            <li><a href="#h-costs">The cost sheet</a></li>
+          </ol>
+        </nav>
+
+        <h3 id="h-ratchet">The ratchet</h3>
+
+        <p>Clark does not present chapter 1 as an escalation — he presents the
+        finished architecture and then motivates it. But an escalation is
+        buried in it, and surfacing it is the difference between knowing that
+        cortex is supposed to work this way and understanding why anyone would
+        propose something so counterintuitive. Four turns, each forced by the
+        failure of the one before.</p>
+
+        <ol class="ratchet">
+          <li>
+            <h4 id="h-turn-1">Feature detection, and the problem it cannot see</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>A feedforward hierarchy of detectors. Photoreceptors feed
+              cells tuned to oriented edges, which feed cells tuned to
+              contours and conjunctions, which feed cells tuned to shapes and
+              eventually objects. This was not a naive idea; it was the most
+              productive framework in twentieth-century vision science, and it
+              was built on real findings — David Hubel and Torsten Wiesel's
+              orientation-selective cells in cat visual cortex were discovered
+              in the late 1950s and won a Nobel Prize. Each stage extracts
+              more, and the percept is what comes out of the top.</dd>
+
+              <dt>What breaks</dt>
+              <dd>The inverse problem, made concrete. What reaches the retina
+              at any point is <em>luminance</em>, which is the product of how
+              reflective a surface is and how brightly it is lit. A detector
+              reading luminance cannot separate those two factors, because
+              they arrive multiplied together: a white surface in shadow and a
+              grey surface in sunlight can deliver
+              <span class="val">exactly the same value</span>. Yet what you
+              see, reliably, is the reflectance — the surface colour — not the
+              luminance. No amount of further feedforward processing recovers
+              a quantity that was destroyed at the sensor. Detection cannot do
+              it, because the information is not there to be detected.</dd>
+
+              <dt>The fix</dt>
+              <dd>Run the problem backwards. Instead of asking what features
+              the signal contains, hold a model of how scenes
+              <em>generate</em> signals and ask which scene would have
+              produced this one. That model can encode the missing constraint
+              — that illumination usually varies smoothly and slowly while
+              reflectance varies sharply — and so recover what the sensor
+              confounded.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">You now need a generative model, which has to
+              be learned and stored, and you need some way of searching for
+              the hypothesis that best fits. Both are expensive, and neither
+              is required by the detection story.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-2">Feedback as modulation, and the redundancy nobody spends</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>The compromise position, and for decades the mainstream one:
+              a feedforward stream that carries the data, plus descending
+              connections that bias, prime and modulate it. Expectation makes
+              detection faster and lowers thresholds; the data still flows
+              upward.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Two things, and the second is the one that forces the
+              design. First, the anatomy is out of proportion to the job.
+              Descending cortico-cortical projections are not a small
+              corrective trickle — in many areas they equal or outnumber the
+              ascending ones, and "modulation" is a thin functional
+              description of that much wiring. Second, the forward stream is
+              carrying enormous redundancy. Natural images are highly
+              correlated: neighbouring points are usually similar, and most of
+              what a receptor reports at any instant is <em>the same thing its
+              neighbour just reported</em>. A channel that transmits all of it
+              spends most of its bandwidth on the predictable part. Engineers
+              solved this problem in the 1950s for telephony and television,
+              and the solution has a name: transmit only the difference from
+              what the receiver could already have worked out.</dd>
+
+              <dt>The fix</dt>
+              <dd>Make the descending signal an actual <em>prediction</em> of
+              the lower level's activity, and make the ascending signal the
+              <em>difference</em> between that prediction and what is really
+              there. Not bias — subtraction. This is predictive coding proper,
+              and it explains the descending anatomy by giving it the main
+              job.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Two functionally distinct populations are now
+              required at every level — units that carry the current estimate,
+              and units that carry the residual — precisely wired so that each
+              error unit receives its own prediction. It is a much stronger
+              and much more falsifiable anatomical commitment than
+              "modulation."</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-3">One level is not enough</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>A predictor and a residual: one model attempting to explain
+              the sensory signal.</dd>
+
+              <dt>What breaks</dt>
+              <dd>The causes of a sensory stream are nested, and they run at
+              wildly different speeds. A face is a slow, stable cause; the
+              edge pattern it produces changes every time the head turns or
+              the light shifts. A single-level model must try to predict fast
+              surface detail directly from whatever it knows, which means it
+              must either be astronomically large — one entry per possible
+              configuration — or be wrong most of the time.</dd>
+
+              <dt>The fix</dt>
+              <dd>Stack the arrangement. Each level predicts the activity of
+              the level below and receives, as its own data, the residual that
+              level could not explain. Slow abstract causes sit near the top,
+              fast concrete ones near the bottom, and each level only has to
+              model the regularities at its own timescale. What ascends is
+              always a complaint about the level below, never raw signal.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Generality is bought with fragility. Every
+              level is a place the scheme can misfire, and the topmost level
+              has nothing above it to correct it — its expectations, sometimes
+              called <em>hyperpriors</em>, are structurally insulated from
+              revision by data.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-4">Where the model comes from</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>A hierarchy that infers beautifully, given a model. The
+              model has been assumed.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Nothing has said where a generative model of the world could
+              come from. Supplying it innately is not credible at this
+              resolution, and supervised learning is not available — nobody
+              labels the visual scene for an infant.</dd>
+
+              <dt>The fix</dt>
+              <dd>The same error signal does both jobs, at two timescales. On
+              the fast timescale, error revises the current estimate: that is
+              perception. On the slow timescale, error revises the
+              <em>weights</em> that generate predictions: that is learning.
+              The stream supplies its own training signal, because every
+              failed prediction is a labelled example of how the world
+              actually behaves. No teacher is needed.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">The model can only learn from errors it
+              actually makes. A systematic distortion that never produces a
+              residual — because the system's own expectations conceal it — is
+              invisible to the learning rule and can persist indefinitely.
+              This is not a footnote: it is the mechanism behind several of
+              the clinical conditions in
+              <a href="08-when-precision-goes-wrong.html">Part&nbsp;8</a>.</dd>
+            </dl>
+          </li>
+        </ol>
+
+        <p>One further turn is needed and is not taken in chapter 1: error
+        signals are useless unless the system knows how far to trust them.
+        Clark hands that turn to chapter 2, and so does this readthrough —
+        it is <a href="03-precision-and-attention.html">Part&nbsp;3</a>, and
+        it is the most important page here.</p>
+
+        <figure id="h-figure">
+          <svg viewBox="0 0 420 296" role="img" aria-labelledby="figtitle figdesc">
+            <title id="figtitle">One level of a prediction hierarchy, in two conditions</title>
+            <desc id="figdesc">Two columns show the same two-level circuit. A
+            higher-level estimate sends a descending prediction to an error
+            unit, which subtracts it from the sensory drive arriving from
+            below. In the left column the prediction matches the drive and the
+            error unit is silent; in the right column the drive falls away, the
+            prediction is unchanged, and the error unit fires strongly.</desc>
+
+            <defs>
+              <marker id="pm-ah" viewBox="0 0 10 10" refX="9" refY="5"
+                      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="fig-arrow"/>
+              </marker>
+            </defs>
+
+            <text x="0" y="12" class="fig-label">Predicted stimulus</text>
+            <text x="228" y="12" class="fig-label">Prediction violated</text>
+            <text x="0" y="28" class="fig-sub">bar continues through the field</text>
+            <text x="228" y="28" class="fig-sub">bar ends inside the field</text>
+
+            <!-- LEFT COLUMN -->
+            <rect x="0" y="38" width="186" height="40" rx="4" class="fig-box"/>
+            <text x="10" y="56" class="fig-label">Level 2 estimate</text>
+            <text x="10" y="72" class="fig-val">r₂ = 0.90 &#8220;a long bar&#8221;</text>
+
+            <path d="M 46 78 L 46 118" class="fig-flow" marker-end="url(#pm-ah)"/>
+            <text x="54" y="102" class="fig-sub">predicts 0.90</text>
+
+            <rect x="0" y="122" width="186" height="40" rx="4" class="fig-box"/>
+            <text x="10" y="140" class="fig-label">Level 1 error unit</text>
+            <text x="10" y="156" class="fig-val">e = 0.90 − 0.90 = 0.00</text>
+
+            <path d="M 140 210 L 140 166" class="fig-flow" marker-end="url(#pm-ah)"/>
+            <text x="6" y="192" class="fig-sub">sensory drive 0.90</text>
+
+            <rect x="0" y="214" width="186" height="34" rx="4" class="fig-box"/>
+            <text x="10" y="236" class="fig-val">stimulus present</text>
+
+            <rect x="0" y="258" width="186" height="30" rx="4" class="fig-box"/>
+            <text x="93" y="278" class="fig-val" text-anchor="middle">silent</text>
+
+            <!-- RIGHT COLUMN -->
+            <rect x="228" y="38" width="186" height="40" rx="4" class="fig-box"/>
+            <text x="238" y="56" class="fig-label">Level 2 estimate</text>
+            <text x="238" y="72" class="fig-val">r₂ = 0.90 unchanged</text>
+
+            <path d="M 274 78 L 274 118" class="fig-flow" marker-end="url(#pm-ah)"/>
+            <text x="282" y="102" class="fig-sub">still predicts 0.90</text>
+
+            <rect x="228" y="122" width="186" height="40" rx="4" class="fig-box-hi"/>
+            <text x="238" y="140" class="fig-label">Level 1 error unit</text>
+            <text x="238" y="156" class="fig-val">e = 0.10 − 0.90 = −0.80</text>
+
+            <path d="M 368 210 L 368 166" class="fig-line"/>
+            <text x="234" y="192" class="fig-sub">sensory drive 0.10</text>
+
+            <rect x="228" y="214" width="186" height="34" rx="4" class="fig-box"/>
+            <text x="238" y="236" class="fig-val">stimulus absent</text>
+
+            <rect x="228" y="258" width="186" height="30" rx="4" class="fig-box-hi"/>
+            <text x="321" y="278" class="fig-val" text-anchor="middle">fires — &#8220;endstopped&#8221;</text>
+          </svg>
+          <figcaption><b>Figure 1.</b> The same circuit, twice. A cell that
+          responds to a short bar but falls silent for a long one looks
+          bizarre as a feature detector — what feature is <i>absence of
+          continuation</i>? — and is exactly what an error unit should do. The
+          descending prediction is identical in both columns; only the
+          agreement changes.</figcaption>
+        </figure>
+
+        <div class="trace">
+          <h3 id="h-trace" data-label="The trace">A bar that ends, all the way through</h3>
+
+          <p>Run one complete operation with real values. The setting is the
+          classic endstopping result: some cells in visual cortex respond well
+          to a short bar of the right orientation and respond
+          <em>less</em> when the bar is extended beyond their receptive field.
+          On the detection story this is awkward. On this machine it is
+          obligatory.</p>
+
+          <ol>
+            <li>Fix the parameters. The level-2 estimate is
+            <span class="val">r₂ = 0.90</span>, encoding a confident
+            hypothesis that an oriented bar runs continuously through this
+            patch of the visual field. The generative weight linking level 2
+            to level 1 is <span class="val">U = 1.0</span>, so the descending
+            prediction of level-1 activity is
+            <span class="val">U × r₂ = 0.90</span>. Learning rate for the
+            update is <span class="val">k = 0.5</span>.</li>
+
+            <li><b>Case A, receptive field inside the bar.</b> The sensory
+            drive at level 1 is <span class="val">0.90</span>. The error unit
+            computes drive minus prediction:
+            <span class="val">0.90 − 0.90 = 0.00</span>. The residual is zero,
+            so nothing ascends. The stimulus is present, strongly, and the
+            forward signal is <em>silence</em> — because the level above
+            already knew.</li>
+
+            <li><b>Case B, receptive field past the end of the bar.</b> The
+            bar has stopped; the sensory drive falls to
+            <span class="val">0.10</span>. The descending prediction has not
+            changed — level 2 still believes in a long bar — so it still
+            predicts <span class="val">0.90</span>. The error unit computes
+            <span class="val">0.10 − 0.90 = −0.80</span>. That is a large
+            residual, and it ascends.</li>
+
+            <li><b>The update.</b> Level 2 revises its estimate in proportion
+            to the residual it received:
+            <span class="val">r₂ ← 0.90 + 0.5 × 1.0 × (−0.80) = 0.50</span>.
+            The hypothesis has moved from "a long bar" towards "a shorter
+            bar." Present the same stimulus again and the descending
+            prediction is now 0.50, the residual shrinks to
+            <span class="val">0.10 − 0.50 = −0.40</span>, and the cycle
+            continues until the estimate stops being surprised.</li>
+
+            <li><b>What the recording electrode sees.</b> A unit that is quiet
+            for a long bar and active at the bar's end — which is precisely
+            the endstopping signature, and which the feature-detection story
+            has to treat as a peculiar tuning curve rather than as the system
+            working correctly.</li>
+          </ol>
+
+          <p>This is not a thought experiment. In 1999 Rajesh Rao and Dana
+          Ballard built a hierarchical network on exactly these principles,
+          trained it on natural images, and reported two things in
+          <i>Nature Neuroscience</i>: the representation units developed
+          receptive fields resembling simple cells, and the units carrying the
+          residuals displayed <span class="val">endstopping</span> and other
+          extra-classical receptive-field effects that had been catalogued for
+          decades without a unifying explanation. The effects were not
+          designed in. They fell out of the architecture.</p>
+        </div>
+
+        <h3 id="h-code">The smallest version that shows the behaviour</h3>
+
+        <p>Clark's book contains no code. This is the site's reimplementation
+        of the update rule the trace just ran, reduced to the part that
+        matters — a single level, so the recursion is visible without the
+        bookkeeping.</p>
+
+<pre><code class="language-python"><span class="c"># One level of predictive coding. Perception and learning are the</span>
+<span class="c"># same rule applied at two different rates.</span>
+<span class="k">def</span> settle(drive, r, U, k=<span class="n">0.5</span>, steps=<span class="n">6</span>):
+    <span class="k">for</span> _ <span class="k">in</span> range(steps):
+        prediction = U * r
+<span class="hl">        error      = drive - prediction        # the only thing that ascends</span>
+        r          = r + k * U * error          <span class="c"># fast: revise the estimate</span>
+        U          = U + <span class="n">0.01</span> * error * r     <span class="c"># slow: revise the model</span>
+    <span class="k">return</span> r, U
+
+settle(drive=<span class="n">0.10</span>, r=<span class="n">0.90</span>, U=<span class="n">1.0</span>)   <span class="c"># the bar ended; r falls towards 0.10</span>
+</code></pre>
+
+        <p>The highlighted line is the whole architectural claim. Everything
+        else in this book — attention, imagery, action, hallucination — is
+        obtained by changing what happens to that quantity on its way up,
+        rather than by adding new machinery.</p>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>Rao and Ballard's result is frequently cited, in Clark and
+          elsewhere, as though it demonstrated that cortex implements
+          predictive coding. It does not, and the distinction matters. It
+          demonstrates that a predictive-coding network trained on natural
+          images <em>reproduces</em> effects that cortex displays. Competing
+          accounts of endstopping in terms of lateral inhibition long
+          predate it and have never been decisively ruled out, and the
+          discriminating experiment — showing that the specific cells carrying
+          these effects are the ones receiving descending predictions — is
+          much harder than the simulation. The evidence is genuinely
+          suggestive and genuinely indirect, and the gap between those is
+          where most of the working disagreement in this field lives.</p>
+        </aside>
+
+        <h3 id="h-free-energy">Where free energy comes in</h3>
+
+        <p>Clark quarantines Karl Friston's formalism into an appendix, and
+        the decision is defensible — you can operate the machine without it —
+        but the relationship is worth stating plainly, because the two
+        vocabularies are used interchangeably in the literature and the reader
+        will meet both.</p>
+
+        <p>What an organism would ideally minimise is <em>surprisal</em>: the
+        improbability of its current sensory state given its model of the
+        world. It cannot compute that directly, because doing so requires
+        averaging over every way the world might have produced the data — an
+        intractable sum. <b>Free energy</b> is a quantity that can be computed
+        from what the system has locally, and that is guaranteed to be an
+        <em>upper bound</em> on surprisal. Push the bound down and you push
+        surprisal down with it, without ever evaluating surprisal. Under the
+        assumption that the relevant distributions are Gaussian, that quantity
+        reduces to something very concrete: a sum of squared prediction
+        errors, each weighted by its precision. Which is to say the machine in
+        this part, and the weighting in the next, are what free-energy
+        minimisation looks like when you write it out. Nothing in the
+        readthrough depends on the derivation; a good deal of the field's
+        rhetoric does.</p>
+
+        <h3 id="h-costs">The cost sheet</h3>
+
+        <p>What this architecture buys, and what it pays. A mechanism without
+        its cost model is a description, and the costs here are unusually
+        interesting because three of them reappear later as
+        <em>explanations</em> of pathology rather than as engineering
+        regrets.</p>
+
+        <div class="table-wrap">
+          <table class="costs">
+            <caption>What this costs, and when it is worth paying</caption>
+            <thead>
+              <tr><th scope="col">Cost</th><th scope="col">Currency</th><th scope="col">Worth paying when</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Two precisely wired populations per level</th><td class="currency">anatomical complexity</td><td>Always, if the bandwidth saving is real — and for natural images it is very large</td></tr>
+              <tr><th scope="row">A generative model that must be stored and maintained</th><td class="currency">metabolic cost, learning time</td><td>When the environment has stable statistics worth learning; badly for one-off environments</td></tr>
+              <tr><th scope="row">Errors the model never makes stay invisible</th><td class="currency">correctability</td><td>Never worth paying, and not optional — it is intrinsic. Re-appears as delusion and as the maintenance of false belief in <a href="08-when-precision-goes-wrong.html">Part&nbsp;8</a></td></tr>
+              <tr><th scope="row">The top of the hierarchy has nothing above it</th><td class="currency">revisability</td><td>Tolerable if hyperpriors encode genuinely invariant structure; catastrophic if one is wrong</td></tr>
+              <tr><th scope="row">Confident predictions suppress real signal</th><td class="currency">sensitivity</td><td>When predictions are usually right — which is why the next part's weighting term is not optional</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>Chapter 1 is the most conventionally expository writing in the
+        book: Clark is laying track, and the enthusiasm is held in reserve. He
+        does not ratchet — he states the architecture and then supports it
+        from many directions at once, which is a survey structure rather than
+        an escalating one. He is also careful, here more than later, to
+        distinguish what the framework asserts from what has been shown, a
+        care that thins noticeably as the applications accumulate.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p><b>Established:</b> that a predictive-coding hierarchy is
+        computationally coherent, that it can be learned without supervision,
+        and that networks built on it reproduce receptive-field properties
+        real cortex displays. Also that the descending anatomy, which the
+        feedforward story never satisfactorily explained, has an obvious job
+        on this account.</p>
+        <p><b>Asserted without justification here:</b> the functional
+        segregation itself. That cortex contains distinct representation and
+        error populations, wired so each error unit receives its matching
+        prediction, is the load-bearing anatomical claim of the entire book —
+        and chapter 1 supports it with consistency arguments and simulation
+        rather than with direct demonstration. Clark's prose is more settled
+        on this point than the evidence is. That is the single most important
+        gap to keep in view while reading the applications, because every one
+        of them inherits it.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>The engineering ancestry is worth knowing, because it makes the
+        idea far less exotic than the neuroscience framing suggests.
+        Predictive coding as a signal-compression technique — transmit only
+        the difference between the signal and what the receiver can already
+        predict — was developed at Bell Labs in the 1950s and is the basis of
+        differential pulse-code modulation, and in various forms of nearly
+        every video codec since. The cortical proposal is the same trick with
+        a different motivation: bandwidth in the one case, inference in the
+        other. Clark notes the affinity; it deserves more weight than he gives
+        it, because it explains why the architecture keeps being independently
+        rediscovered.</p>
+        <p>On the appendix: relegating the free-energy formalism was a
+        reasonable pedagogical choice but has an unfortunate side effect.
+        A great deal of the criticism aimed at this framework is aimed
+        specifically at the free-energy principle — at whether it is an
+        empirical claim at all, or a mathematical identity that could not be
+        false. A reader who takes the appendix as optional will not see why
+        anyone is angry. The <a href="afterword.html">afterword</a> takes this
+        up.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>The machine: descending predictions, ascending residuals, stacked
+        levels, one error signal driving both perception and learning at
+        different rates. The endstopping trace, which is the concrete thing to
+        recall when the architecture feels abstract. And one unpaid debt,
+        named twice now — the residual arriving at a level is meaningless
+        until the system decides how much to trust it. That decision is
+        precision, it is the subject of
+        <a href="03-precision-and-attention.html">Part&nbsp;3</a>, and it is
+        the parameter every later part manipulates.</p>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="01-the-ambitious-thesis.html"><span class="dir">Previous</span><span class="lbl">Part 1 · The ambitious thesis</span></a>
+      <a rel="next" href="03-precision-and-attention.html"><span class="dir">Next</span><span class="lbl">Part 3 · Precision and attention</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p><a href="../../index.html">The Understudy</a> ·
+    <a href="index.html">Surfing Uncertainty</a> ·
+    <a href="../../about.html">About these pages</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part 1 · The ambitious thesis — Surfing Uncertainty</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../../index.html">The Understudy</a> /
+    <a href="index.html">Surfing Uncertainty</a> /
+    <span>Part 1</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="claim">
+      <p class="eyebrow">
+        <span>Part 1 of 10</span><span>claim</span><span>covers the preface and introduction</span><span>~18 min</span>
+      </p>
+
+      <h1 id="h-title">The ambitious thesis, and what it would take to be true</h1>
+
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p>The beginning. Nothing is assumed except a rough sense of the
+        standard story about perception — that signals arrive at the senses
+        and get progressively assembled into a picture. This part does not
+        yet explain the machinery; it establishes what Clark is claiming, what
+        that claim would need to be true, and which of its conditions is
+        actually carrying the weight. Everything after this is the machinery
+        and its applications.</p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-meat">Meat that predicts</a></li>
+            <li><a href="#h-joints">The joint map</a></li>
+            <li><a href="#h-walk">The case walked: five days in a blindfold</a></li>
+            <li><a href="#h-contrast">The contrast: Helmholtz, who had three of the five</a></li>
+            <li><a href="#h-support">The support ledger</a></li>
+          </ol>
+        </nav>
+
+        <h3 id="h-meat">Meat that predicts</h3>
+
+        <p>The preface opens with two aliens who cannot believe what they have
+        found. They are from Terry Bisson's 1991 <i>Omni</i> story
+        "They're Made Out of Meat," a piece written entirely as dialogue
+        between two exasperated extraterrestrials trying to file a report on a
+        species that thinks with an organ made of meat. Clark's title for the
+        preface — <i>Meat That Predicts</i> — is doing more than borrowing a
+        joke. The aliens' incredulity is the reader's, aimed at a different
+        target: not that meat should think, but that thinking should turn out
+        to be one specific and rather unglamorous operation performed by that
+        meat, over and over, at every level, for perception and imagination
+        and action alike.</p>
+
+        <p>The introduction, <i>Guessing Games</i>, names the operation.
+        Brains guess. They guess continuously, at multiple scales, about what
+        their own sensory surfaces are about to register, and the entire
+        apparatus is organised around detecting and correcting the errors in
+        those guesses. Clark's ambition — and he is explicit that it is an
+        ambition rather than a demonstration — is that this single idea, given
+        the right architecture, delivers a
+        <span class="val">unified</span> account of perception, action,
+        attention, imagination, and a good deal of psychiatry. He calls the
+        package <b>Predictive Processing</b>, and abbreviates it PP.</p>
+
+        <p>It is worth being precise about how much of this is new, because
+        the book is often read as claiming more novelty than it does. That
+        perception involves inference is not new; Hermann von Helmholtz argued
+        it in the 1860s, and almost nobody in vision science has seriously
+        disputed it since. What is new — and what makes the thesis
+        <em>ambitious</em> rather than <em>safe</em> — is a set of specific
+        architectural commitments about how the inference is implemented in
+        cortex, and a claim that the same implementation covers domains that
+        have never been treated as perceptual at all. Separating the safe
+        claim from the ambitious one is the whole business of the joint map
+        below, and it is the single most useful thing to have straight before
+        reading the rest of the book.</p>
+
+        <h3 id="h-joints">The joint map</h3>
+
+        <p>The thesis decomposes into five conditions. They are numbered
+        because the remaining nine parts refer to them by number, and because
+        the interesting disagreements in the literature turn out to be
+        disagreements about particular joints rather than about the thesis as
+        a whole.</p>
+
+        <ol class="joints">
+          <li id="j1">
+            <span class="joint-name">The sensory signal underdetermines its causes</span>
+            <p>This is the inverse problem, and it is a matter of geometry
+            rather than psychology. A two-dimensional pattern of light on the
+            retina is consistent with indefinitely many three-dimensional
+            arrangements of surfaces, illuminations and viewpoints: a small
+            near object and a large far one project identically, and a
+            surface's brightness confounds how reflective it is with how
+            brightly it is lit. The same holds for a pressure wave at the
+            eardrum, which mixes every sound source in the room into a single
+            scalar over time. So perception cannot be a matter of reading
+            structure off the signal, because the structure is not in the
+            signal. Something has to supply the missing constraint.</p>
+          </li>
+          <li id="j2">
+            <span class="joint-name">A generative model supplies the constraint</span>
+            <p>What supplies it is knowledge of how the world produces
+            sensory data — not a catalogue of appearances but a model that
+            runs <em>forwards</em>, from hypothesised causes to their expected
+            sensory consequences. Given a candidate scene, the model says what
+            the retina should be receiving. Perception then becomes a search
+            for the hypothesis whose predicted consequences best match what
+            arrived. Two properties matter for what follows. The model is
+            <em>learnable</em> from the sensory stream itself, without a
+            teacher supplying labels, because the stream provides its own
+            training signal every time a prediction fails. And it is
+            <em>hierarchical</em>: causes at one level are themselves
+            predicted by slower, more abstract causes at the level above.</p>
+          </li>
+          <li id="j3">
+            <span class="joint-name">Only the residual travels forward</span>
+            <p>Here is the architectural commitment, and it is where PP stops
+            being a philosophical position and starts being a testable claim
+            about cortex. Descending connections carry predictions. Ascending
+            connections carry <em>only the prediction error</em> — the part of
+            the incoming signal that the descending prediction failed to
+            account for. A perfectly predicted stimulus produces almost no
+            forward signal at all. This inverts the textbook picture, in which
+            forward connections carry the data and backward connections
+            modulate it. On the PP account the forward stream is not the data;
+            it is the complaint.</p>
+          </li>
+          <li id="j4">
+            <span class="joint-name">Error is weighted by expected reliability</span>
+            <p>Prediction error cannot be acted on at face value, because
+            sensory channels vary from moment to moment in how much they can
+            be trusted — a visual estimate in fog, a proprioceptive estimate
+            in a numb limb. So each error signal is multiplied by an estimate
+            of the reliability of the channel it came from. That weight is
+            called <b>precision</b>, defined as the inverse of the expected
+            variance. Without joint 4 the scheme is not merely suboptimal but
+            self-destroying, since it would revise its model of the world on
+            the strength of noise. <a
+            href="03-precision-and-attention.html">Part&nbsp;3</a> is entirely
+            about this joint, and Parts 4, 5, 8 and 9 are all applications of
+            it.</p>
+          </li>
+          <li id="j5">
+            <span class="joint-name">Action minimises the same quantity</span>
+            <p>The move that makes the thesis ambitious. Prediction error is a
+            mismatch between what is predicted and what is sensed, and a
+            mismatch can be removed from either end. Change the prediction to
+            fit the sensory data and you have perception; change the sensory
+            data to fit the prediction, by moving, and you have action. Clark
+            takes this seriously enough to accept its strange consequence:
+            motor commands are not commands but <em>proprioceptive
+            predictions</em>, and the movement happens because the reflex arcs
+            cancel the resulting error. Perception and action stop being two
+            systems bridged by a decision and become two directions of one
+            operation.</p>
+          </li>
+        </ol>
+
+        <p class="joint-verdict"><strong>The joints are conjunctive, and
+        joint&nbsp;3 is carrying the argument — though joint&nbsp;4 is
+        carrying the <em>reach</em>.</strong> That distinction is worth
+        holding onto. Remove joint 3 and you are left with a claim
+        substantially identical to Helmholtz's: that perception is inference
+        constrained by prior knowledge. That claim is old, widely accepted,
+        and makes almost no commitments about brains. Joint 3 is what turns it
+        into a research programme, because it predicts specific and checkable
+        things about which cells fire when. Joint 4, meanwhile, is what lets
+        one mechanism stretch across attention, imagery, action, autism and
+        psychosis — every one of those applications is a story about a
+        precision setting. Joint 3 makes the thesis <em>testable</em>;
+        joint 4 makes it <em>ambitious</em>.</p>
+
+        <div class="case-walk">
+          <h3 id="h-walk" data-label="The case walked">Five days in a blindfold, joint by joint</h3>
+
+          <p>Take the case Clark uses to unsettle the standard picture before
+          he has argued against it: what happens when you take the sensory
+          data away. Intuition says perception should stop, or thin out
+          towards nothing. Run it through the joints instead.</p>
+
+          <ol>
+            <li><strong>Joint 1 is present, in the limit.</strong> In 2004
+            Lotfi Merabet and colleagues fitted
+            <span class="val">13</span> healthy sighted volunteers — no
+            psychiatric history, no ocular pathology — with a sealed blindfold
+            and kept it on for <span class="val">five consecutive days</span>,
+            ninety-six hours, with subjects dictating their experiences into a
+            handheld recorder.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup> Underdetermination is normally partial: the
+            signal is consistent with many world-states. Here it is total. The
+            signal is consistent with <em>every</em> world-state, because
+            there is no signal.</li>
+
+            <li><strong>Joint 2 is untouched.</strong> The generative model
+            does not depend on input for its existence. It is a standing
+            structure — learned over a lifetime, encoded in the strengths of
+            descending connections — and it continues to generate predictions
+            about what the visual system should be registering whether or not
+            anything is registering. Nothing about the blindfold reaches down
+            and switches it off.</li>
+
+            <li><strong>Joint 3 is present, and now decisive.</strong> The
+            only thing that ever corrects a descending prediction is the
+            residual that ascends when the prediction is wrong. Blindfolded,
+            there is no residual. So there is nothing in the system capable of
+            saying <em>no, not that</em> — the ordinary corrective traffic has
+            gone silent, and the descending model runs uncontested.</li>
+
+            <li><strong>Joint 4 explains the character of what happens
+            next.</strong> Precision on the visual channel collapses, because
+            the system's own estimate of that channel's reliability falls to
+            near zero. With the sensory weight at the floor, the prior does
+            all the work, and the content of experience becomes whatever the
+            generative model most expects to see. Since that model was trained
+            on a world containing faces, landscapes and objects, that is what
+            it produces.</li>
+
+            <li><strong>The outcome follows from the structure.</strong>
+            <span class="val">Ten of the thirteen</span> subjects — 77% —
+            reported visual hallucinations. Not noise or blankness: both
+            simple forms, bright spots and flashes of light, and fully
+            complex ones — faces, landscapes, ornate objects. The standard
+            bottom-up picture predicts an absence. The joints predict a
+            presence, and specifically a <em>structured</em> presence drawn
+            from the statistics of the world the model was trained on. That is
+            what the record shows.</li>
+          </ol>
+
+          <p>The same pattern shows up on a shorter timescale. Oliver Mason
+          and Francesca Brady put <span class="val">19</span> participants in
+          an anechoic chamber — total deprivation of both light and sound —
+          and elicited perceptual disturbances, paranoia and other
+          psychotic-like experiences after as little as
+          <span class="val">15 minutes</span>, most strongly in those already
+          prone to hallucinatory experience.</p>
+        </div>
+
+        <div class="case-walk contrast">
+          <h3 id="h-contrast" data-label="The contrast">Helmholtz, who had three of the five</h3>
+
+          <p>Now the case that shows which joint is doing the work. In the
+          1860s, in the <i>Handbuch der physiologischen Optik</i>, Hermann von
+          Helmholtz argued that perception is <em>unbewusster Schluss</em> —
+          unconscious inference.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup> He had joint 1 outright: he understood the
+          inverse problem better than anyone of his generation, having done
+          the optics himself. He had a workable version of joint 2, since the
+          inference he described was constrained by knowledge of how objects
+          ordinarily produce retinal images. He arguably had a version of
+          joint 5, given his interest in how eye movements contribute to
+          spatial perception.</p>
+
+          <p>He did not have joint 3, and could not have — the anatomy was not
+          known. And that is the difference between a doctrine and a research
+          programme. What does the claim predict once joint 3 is removed? That
+          perception is inferential, that priors matter, that illusions reveal
+          assumptions. All true, all confirmed, and none of it constraining:
+          it is compatible with essentially any implementation, which is why
+          the doctrine could sit largely unchanged for a century while vision
+          science was rebuilt around it twice. It generates no expectation
+          about what a cell in V1 should do when its stimulus is perfectly
+          predicted, because it says nothing about what ascending fibres
+          carry.</p>
+
+          <p>Add joint 3 and the claim acquires teeth. It now predicts that
+          perfectly predictable stimulation should <em>reduce</em> forward
+          firing, that the surround effects long catalogued in visual cortex
+          should be signatures of failed prediction rather than of feedforward
+          feature detection, and that the massive descending projections
+          anatomists had been unable to assign a function to are the carriers
+          of the model. Those are checkable, and
+          <a href="02-the-prediction-machine.html">Part&nbsp;2</a> checks
+          them. The record broadly agrees, with qualifications the
+          <a href="afterword.html">afterword</a> takes up.</p>
+        </div>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>The Mason and Brady study is a useful particular but a thin one,
+          and Clark's framing does not flag how thin. It is a pilot with 19
+          participants total, split across conditions, using self-report on
+          scales designed for a different purpose. It is entirely consistent
+          with the joints; it establishes very little on its own. The Merabet
+          blindfold study is the stronger of the two — longer, better
+          controlled, with a striking base rate — but note what neither can
+          do: both are consistent with any account on which reduced input
+          releases spontaneous activity, including accounts with no
+          generative model in them at all. Deprivation hallucinations sit
+          comfortably inside PP without being evidence that discriminates it
+          from its rivals.</p>
+        </aside>
+
+        <h3 id="h-support">The support ledger</h3>
+
+        <p>What is actually offered for each joint, of what type, and how much
+        it can bear. This table is a map of where the argument is strong and
+        where it is being asked to hold on credit; the parts that follow fill
+        in the cells.</p>
+
+        <div class="support-wrap">
+          <table class="support">
+            <caption>Evidence offered, per joint</caption>
+            <thead>
+              <tr><th scope="col">Joint</th><th scope="col">Evidence offered</th><th scope="col">Type</th><th scope="col">Weight it bears</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="#j1">1</a></th>
+                <td>The geometry of projection; ambiguity of the retinal image</td>
+                <td class="evidence">inference from theory</td>
+                <td>Decisive and essentially uncontested — but it constrains nothing about implementation</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#j2">2</a></th>
+                <td>Networks trained on natural images developing plausible receptive fields; machine-learning generative models</td>
+                <td class="evidence">simulation</td>
+                <td>Shows sufficiency in principle; cannot show that brains do it this way</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#j3">3</a></th>
+                <td>Endstopping and extra-classical receptive-field effects reproduced by error units; repetition suppression</td>
+                <td class="evidence">model fit to physiology</td>
+                <td>The load-bearing evidence, and genuinely indirect — the effects are consistent with PP, not uniquely predicted by it</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#j4">4</a></th>
+                <td>Quantitative cue-combination psychophysics; attentional gain effects</td>
+                <td class="evidence">psychophysics</td>
+                <td>The strongest support in the book — precise, numerical, replicated</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#j5">5</a></th>
+                <td>Motor neuroscience of reflex arcs and sensory attenuation; the free-energy derivation</td>
+                <td class="evidence">theory plus indirect physiology</td>
+                <td>Elegant and coherent; its most compelling form is formal rather than empirical</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>How the cases were selected.</strong> Clark's method is
+        avowedly an inference to the best explanation, assembled by surveying
+        phenomena across many domains and showing that PP accommodates them.
+        The selection is therefore not neutral: the book gathers cases PP
+        handles <em>well</em>, and does not systematically hunt for cases it
+        handles badly. This is not a hidden flaw — Clark is open about the
+        strategy, and chapter 10 lists outstanding problems — but it is a
+        specification of what the evidence can establish. A survey of
+        successes can demonstrate that a framework is powerful and
+        wide-ranging. It cannot, by itself, establish that the framework is
+        better than an unexamined alternative, because the alternative was not
+        put through the same survey.</p>
+
+        <p><strong>What the claim buys and pays.</strong> The reach is
+        purchased with elasticity, and the currency is joint 4. Precision is a
+        free parameter that the system estimates for itself, which means that
+        for almost any experimental result there exists a precision setting
+        that accommodates it. That is a genuine explanatory resource — it is
+        what lets one mechanism cover attention and autism and dreaming — and
+        it is exactly what critics point to when they argue the framework
+        cannot be refuted by anything. Both readings are available from the
+        same feature, and the honest position is to notice that the property
+        which makes chapters 4 through 9 possible is the property that makes
+        chapter 10 necessary.</p>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>Clark writes with a genial, ranging enthusiasm and a habit of
+        reaching for vivid physical metaphors — surfing, dancing, sculpting —
+        at exactly the moments where the underlying claim is at its most
+        abstract. He is generous with other people's work to a fault,
+        frequently framing a contested proposal in its most attractive form
+        before noting the dispute in a subordinate clause. The recurring
+        rhetorical move is the reveal: set up a familiar phenomenon, show it
+        dissolving into the prediction-error story, and let the reader feel
+        the framework absorb another domain. That move is genuinely
+        illuminating and it is also, cumulatively, the book's principal
+        instrument of persuasion.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p><b>Established:</b> that the ambitious thesis has five separable
+        conditions, that joints 1 and 2 are near-consensus positions inherited
+        from a long tradition, and that the interesting content lives in
+        joints 3, 4 and 5.</p>
+        <p><b>Asserted, and to be discharged later:</b> everything about
+        implementation. This part has not shown that cortex works this way,
+        only what would have to be true for it to. Clark's own preface and
+        introduction are similarly forward-leaning; they promise a unified
+        science and describe its shape without yet supplying the machinery.
+        A reader who finds the introduction over-confident is reading it
+        correctly — it <em>is</em> a prospectus, and the prose is more certain
+        than anything argued at that point warrants.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>The word "unified" does a great deal of work in this book, and it
+        is worth deciding early which of two things it means. It might mean
+        that one <em>mechanism</em> — literally the same cortical
+        computation — implements perception, action, attention and imagery.
+        Or it might mean that one <em>formal description</em> covers all of
+        them, in the way that a variational principle covers optics and
+        mechanics without those being the same physical process. Clark
+        generally intends the stronger reading. Matteo Colombo, reviewing the
+        book in <i>Minds &amp; Machines</i> in 2017, argued that the evidence
+        assembled will not support it: the sources Clark draws on are
+        heterogeneous, deep-learning systems and Bayesian model-builders are
+        aimed at different tasks, and current neuroscience suggests brains
+        optimise many distinct cost functions rather than one. His alternative
+        image is a patchwork quilt of models with no single one enjoying
+        primacy. That objection is taken up properly in
+        <a href="afterword.html">the afterword</a>; it is flagged here because
+        the strong reading of "unified" is installed in the introduction, long
+        before it is defended.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>Five numbered joints, referred to by number from here on. The
+        distinction between the safe claim (perception is inference) and the
+        ambitious one (a specific cortical architecture implements it, and the
+        same architecture covers action). And one expectation to test as you
+        read: that essentially every application in Parts II and III of the
+        book will turn out to be a story about <a href="#j4">joint 4</a>.
+        <a href="02-the-prediction-machine.html">Part&nbsp;2</a> builds the
+        architecture that joints 2 and 3 describe, and shows why anyone would
+        have arrived at such a strange design.</p>
+      </section>
+
+      <section class="footnotes" aria-labelledby="h-fn">
+        <h2 id="h-fn">Footnotes</h2>
+        <ol>
+          <li id="fn-1">Merabet, L. B. et&nbsp;al. (2004), "Visual
+          hallucinations during prolonged blindfolding in sighted subjects,"
+          <i>Journal of Neuro-Ophthalmology</i>. Thirteen subjects, ninety-six
+          hours, ten reporting hallucinations.
+          <a class="fn-back" href="#fnref-1" aria-label="Back to reference 1">&#8617;</a></li>
+          <li id="fn-2">Helmholtz's term is usually rendered "unconscious
+          inference." He did not think the inference was available to
+          introspection, which is one reason the doctrine was resisted for so
+          long by those who took perception to be a form of direct
+          acquaintance.
+          <a class="fn-back" href="#fnref-2" aria-label="Back to reference 2">&#8617;</a></li>
+        </ol>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="index.html"><span class="dir">Previous</span><span class="lbl">Book index</span></a>
+      <a rel="next" href="02-the-prediction-machine.html"><span class="dir">Next</span><span class="lbl">Part 2 · The prediction machine</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p><a href="../../index.html">The Understudy</a> ·
+    <a href="index.html">Surfing Uncertainty</a> ·
+    <a href="../../about.html">About these pages</a></p>
+  </footer>
+</body>
+</html>

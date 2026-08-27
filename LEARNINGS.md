@@ -122,3 +122,26 @@ session list, when identifying which project you are in. Anything about a home
 feed, post categories or review posts belongs to `book-reviews`. Markers that
 must survive a move go in git-tracked files; `~/.claude` memory is keyed by the
 very thing that breaks.
+
+## The preview pane does not apply `:target`, and sanitises the CSSOM
+
+A second `:target` false negative, with a different cause than the first. In the
+in-app preview pane, `.footnotes li:target` matched via `matches(':target')` and
+via `querySelector`, `--accent-tint` resolved to a real colour, and the computed
+background was still transparent. The tell was that a *pre-existing* rule —
+`ol.joints > li:target::before`, verified working during bootstrap — failed
+identically. The pane also reports `selectorText` as undefined on all 260
+parsed rules, so any probe that walks `document.styleSheets` looking for a
+selector silently finds nothing and reads as evidence of a missing rule.
+
+Two further pane artefacts cost time in the same session: `documentElement.clientWidth`
+reads `0` until an explicit `resize_window`, which makes every overflow
+measurement report a false positive; and a `file://` page opens as a `data:`
+snapshot, so relative `../../assets/style.css` never loads and the page renders
+unstyled.
+
+**Rule:** before trusting a negative rendering result in the pane, reproduce it
+against a rule known to work. Always `resize_window` to an explicit viewport and
+assert `getComputedStyle(body).fontFamily` before measuring, and serve over
+`http://` rather than opening `file://` in the pane. `getComputedStyle` on real
+elements is reliable; CSSOM introspection and `:target` are not.

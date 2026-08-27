@@ -28,3 +28,12 @@ Four decisions were confirmed before any code was written:
 | `PROMPT.md` | Prompt log, not a copy of the brief | `CLAUDE.md` is already the checked-in brief |
 
 Deliverable summary in [memory/2026-08-25.md](memory/2026-08-25.md).
+
+## 2026-08-27
+
+- Add book - Surfing Uncertainty.
+- (Clarification) The previous sessions shown for this project actually belong
+  to the book-reviews project, which was earlier named 'books'. Make a
+  permanent distinction so future sessions are not confused, including in any
+  folder-scoped memory.
+- Implement the plan.

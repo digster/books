@@ -126,6 +126,12 @@ label text between ~12px at 360px and ~20px on a desktop. SVG text scales with
 the drawing, so a wide `viewBox` produces an illegible figure on a phone and
 there is no second drawing to fall back to.
 
+Figures live **inline in the page**, not in a `figures/` directory. §3 of the
+brief sketches one, but §12 and the part templates require `<figure><svg>`
+inline, and inline is what the checker's `kinds` rule looks for inside
+`#read` — a mechanism part with its SVG in a separate file would fail. Book
+folders therefore have no `figures/` subdirectory; do not create one.
+
 ---
 
 ## 4 · Where the served tree ends

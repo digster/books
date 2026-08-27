@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Surfing Uncertainty — The Understudy</title>
+  <meta name="description" content="A readthrough of Andy Clark's Surfing Uncertainty (2016): predictive processing, precision-weighting, active inference, and the embodied mind — transmitted in full.">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../../index.html">The Understudy</a> /
+    <span>Surfing Uncertainty</span>
+  </header>
+
+  <main id="main">
+    <article class="part">
+      <p class="eyebrow">
+        <span>Andy Clark</span><span>2016</span><span>10 parts</span><span>~34,569 words</span><span>~198 min</span>
+      </p>
+
+      <h1 id="h-title">Surfing Uncertainty</h1>
+
+      <section id="orientation">
+        <h2 id="h-orientation">Orientation</h2>
+
+        <p>This is a synthesis, not a discovery report. Andy Clark is a
+        philosopher of cognitive science, and what he does in this book is
+        take a computational story that had been developing in scattered
+        places — Karl Friston's free-energy work, Rajesh Rao and Dana
+        Ballard's predictive coding of visual cortex, Bayesian perceptual
+        psychophysics, machine learning on generative models — and argue that
+        it is one story, that the story is about the whole mind rather than
+        about vision, and that it is unexpectedly friendly to the embodied and
+        extended views of cognition Clark had spent the previous twenty years
+        defending. He calls the resulting package <b>Predictive
+        Processing</b>, abbreviated <b>PP</b> throughout.</p>
+
+        <p>The claim underneath is easy to state and hard to absorb: the
+        brain is not in the business of receiving the world. It is in the
+        business of <em>predicting</em> its own sensory stream, and what
+        travels up through the cortical hierarchy is not the signal but the
+        residue — the part of the signal the brain did not manage to predict.
+        Perception, on this account, is not a process that builds a picture
+        out of incoming data. It is a process that finds the hypothesis whose
+        downward predictions best cancel the incoming data, and the percept
+        <em>is</em> that hypothesis.</p>
+
+        <p>What world did it come out of? Two, in tension. From
+        computational neuroscience, a rapidly consolidating formalism that
+        by 2016 had been applied to receptive fields, binocular rivalry,
+        attention, motor control, and psychiatry, and whose adherents were
+        increasingly using the words "unified theory." From embodied
+        cognitive science, a long-running insurgency against exactly that
+        kind of neurocentric unification — the view that cognition is
+        constituted by bodily engagement and environmental structure, not by
+        rich internal models. Clark's ambition is to show that the first
+        vindicates rather than defeats the second. Whether he succeeds is the
+        book's central contested question, and the afterword takes it up
+        directly.</p>
+
+        <p><b>What you need before starting.</b> No mathematics: the formal
+        machinery is quarantined into two short appendices, and this
+        readthrough carries the arithmetic you actually need in the traces.
+        It does help to know what a probability distribution's
+        <em>variance</em> is, since the book's single most important technical
+        term — precision — is defined as its reciprocal. Some familiarity with
+        the standard picture of perception as bottom-up feature detection is
+        assumed, because the whole book is written against it; where that
+        matters, <a href="02-the-prediction-machine.html">Part&nbsp;2</a>
+        supplies it. Clark also assumes you know roughly what he means by
+        "the extended mind," which is his own earlier thesis; <a
+        href="09-lazy-brains-and-dark-rooms.html">Part&nbsp;9</a> supplies
+        that too rather than leaving you to guess.</p>
+
+        <p><b>Which edition.</b> These pages follow the 2016 Oxford
+        University Press hardback (xviii + 401 pages, ISBN
+        978-0-19-021701-3). A paperback reprint appeared in 2019 (ISBN
+        978-0-19-093321-0) with different pagination; the few page citations
+        here are to the 2016 hardback.</p>
+      </section>
+
+      <section id="arc">
+        <h2 id="h-arc">The arc</h2>
+
+        <p>The book moves in three parts, and the movement is genuinely an
+        escalation rather than a survey. <b>Part I builds the machine.</b>
+        Chapter 1 establishes the two computational primitives — prediction
+        and prediction error — and the architectural claim that goes with
+        them: that descending connections carry predictions, ascending
+        connections carry only what the predictions failed to explain, and
+        the cortical hierarchy is a stack of such exchanges. Chapter 2 adds
+        the term that does most of the book's later work. Prediction error
+        cannot be taken at face value, because sensory channels differ in how
+        trustworthy they are from moment to moment, so each error signal is
+        weighted by an estimate of its reliability. That weight is
+        <em>precision</em>, and Clark's move is to identify precision-weighting
+        with attention — not to explain attention by it, but to claim they are
+        the same operation seen from two sides. Chapter 3 then does something
+        clever with the machine just built: it runs it with the sensory input
+        disconnected, and finds imagination, dreaming and memory falling out
+        of the same apparatus.</p>
+
+        <p><b>Part II embodies it,</b> and these are the philosophically
+        richest chapters. Chapter 4 makes the move that gives the book its
+        shape: if perception minimises prediction error by changing the
+        model to fit the world, action minimises it by changing the world to
+        fit the model. Motor commands become proprioceptive predictions, and
+        the reflex arcs that fulfil them become error-cancelling machinery.
+        Perception and action stop being two systems joined by a decision
+        stage and become two directions of one operation. Chapter 5 extends
+        that to the way action shapes the sensory stream and to how we read
+        other people's intentions. Chapter 6 confronts the question that
+        makes philosophers nervous: if the brain is running a generative
+        model, what kind of <em>representation</em> is that, and does it hand
+        back everything embodied cognition spent decades rejecting?
+        Chapter 7 turns the apparatus inward, onto interoception, emotion,
+        the sense of self, and the psychiatric conditions — schizophrenia,
+        autism — where the framework has been most productive and most
+        contested.</p>
+
+        <p><b>Part III scales it out and then, to Clark's credit, turns on
+        it.</b> Chapter 8 argues that the tidy division of reasoning into two
+        systems — fast and slow, model-free and model-based — does not
+        describe two kinds of machinery but different settings of one, and it
+        is here that the extended mind returns: a brain that offloads
+        aggressively onto body and world is exactly what a
+        prediction-error-minimising brain should be. The chapter ends with the
+        objection everyone raises, which Clark names the Darkened Room
+        Puzzle: if the imperative is to minimise surprise, why not find a dark
+        quiet room and stay there until you die? Chapter 9 asks how language,
+        social norms and institutions fit, treating them as structures we
+        build to make each other predictable. Chapter 10 closes by listing
+        what is still wrong with the whole picture.</p>
+
+        <p>Two things are worth holding while you read. The first is that
+        precision is the hinge. Almost every application in Parts II and III
+        works by turning that one knob — up here, down there, broken in this
+        clinical population — and a reader who has really understood
+        <a href="03-precision-and-attention.html">Part&nbsp;3</a> can predict
+        much of what follows. The second is that the book's great strength
+        and its central vulnerability are the same property: the framework's
+        reach. It explains an enormous amount, and the recurring question is
+        whether a framework that can be fitted to any result is telling you
+        about the brain or about itself.</p>
+      </section>
+
+      <section id="how">
+        <h2 id="h-how">How to read this one</h2>
+
+        <p>The parts follow the book's own order, one part per chapter, with
+        the preface and introduction taken together as
+        <a href="01-the-ambitious-thesis.html">Part&nbsp;1</a>. <b>Nothing has
+        been reordered</b>, and that is a deliberate judgement rather than
+        laziness: Clark's sequence <em>is</em> the escalation, and the later
+        chapters are unintelligible without the precision machinery that
+        Chapter 2 installs. Reordering would have to break that dependency,
+        and there is nothing to gain by it.</p>
+
+        <p>There is one hard dependency chain worth naming, because reading
+        out of order across it will not work.
+        <a href="03-precision-and-attention.html">Part&nbsp;3</a> is
+        load-bearing for Parts 4, 5, 8 and 9 — every one of them is an
+        application of precision-weighting, and none of them re-derives it.
+        If you read only three parts, read 2, 3 and 5: the machine, the knob,
+        and the move that turns a perception theory into a theory of
+        action.</p>
+
+        <p>The two appendices are not given parts of their own. Their content
+        is folded into the places where it is actually used, which is stated
+        in the coverage table below.</p>
+      </section>
+
+      <section id="coverage">
+        <h2 id="h-coverage">Coverage</h2>
+
+        <p>Every chapter, with its disposition. Anything short of
+        <span class="disp disp-full">full</span> says why.</p>
+
+        <div class="coverage-wrap">
+          <table class="coverage">
+            <caption>Every chapter accounted for</caption>
+            <thead>
+              <tr>
+                <th scope="col">Ch.</th>
+                <th scope="col">Title</th>
+                <th scope="col">Disposition</th>
+                <th scope="col">Where it lives</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">—</th>
+                <td>Preface: Meat That Predicts</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="01-the-ambitious-thesis.html">Part 1</a></td>
+              </tr>
+              <tr>
+                <th scope="row">—</th>
+                <td>Introduction: Guessing Games</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="01-the-ambitious-thesis.html">Part 1</a></td>
+              </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>Prediction Machines</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="02-the-prediction-machine.html">Part 2</a></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Adjusting the Volume (Noise, Signal, Attention)</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="03-precision-and-attention.html">Part 3</a></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>The Imaginarium</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="04-the-imaginarium.html">Part 4</a></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Prediction for Action</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="05-action-as-inference.html">Part 5</a></td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Sculpting the Flow</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="06-sculpting-the-flow.html">Part 6</a></td>
+              </tr>
+              <tr>
+                <th scope="row">6</th>
+                <td>Engaging the World</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="07-what-kind-of-representation.html">Part 7</a></td>
+              </tr>
+              <tr>
+                <th scope="row">7</th>
+                <td>Expecting Ourselves</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="08-when-precision-goes-wrong.html">Part 8</a></td>
+              </tr>
+              <tr>
+                <th scope="row">8</th>
+                <td>The Lazy Predictive Brain</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="09-lazy-brains-and-dark-rooms.html">Part 9</a></td>
+              </tr>
+              <tr>
+                <th scope="row">9</th>
+                <td>Being Human</td>
+                <td><span class="disp disp-full">full</span></td>
+                <td><a href="10-being-human.html">Part 10</a></td>
+              </tr>
+              <tr>
+                <th scope="row">10</th>
+                <td>The Future of Prediction</td>
+                <td><span class="disp disp-condensed">condensed</span></td>
+                <td><a href="10-being-human.html">Part 10</a>
+                  <span class="why">A short closing chapter that flags
+                  outstanding problems, puzzles and pitfalls rather than
+                  advancing the argument. Its substance is carried in
+                  Part&nbsp;10; its evaluative half belongs in
+                  <a href="afterword.html">the afterword</a>, where the site's
+                  judgement is kept separate from the book's, so it is
+                  reported in both places rather than expanded in the
+                  readthrough.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">A1</th>
+                <td>Appendix 1: Bare Bayes</td>
+                <td><span class="disp disp-folded">folded</span></td>
+                <td><a href="03-precision-and-attention.html">Part 3</a>
+                  <span class="why">It is the arithmetic the precision trace
+                  actually runs, and splitting the formalism from its use made
+                  both harder to follow.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">A2</th>
+                <td>Appendix 2: The Free Energy Formulation</td>
+                <td><span class="disp disp-folded">folded</span></td>
+                <td><a href="02-the-prediction-machine.html">Part 2</a>
+                  <span class="why">Friston's formalism is the backbone of the
+                  generative model, so it is introduced where the generative
+                  model is, with the relationship between free energy and
+                  prediction error stated rather than derived.</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>No chapter here is marked <span class="disp disp-readit">read
+          it</span>, and that is a real claim rather than an oversight. This
+          is an unusually transmissible book: its content is argument and
+          machinery, both of which survive retelling. What does not fully
+          survive is the accumulation — Clark's case is inductive, built by
+          piling up applications until the framework feels inevitable, and a
+          reader who gets the machinery in ten efficient parts does not feel
+          that weight land. See <a href="#still-required">below</a>.</p>
+        </aside>
+      </section>
+
+      <section id="parts">
+        <h2 id="h-parts">The parts</h2>
+
+        <div class="parts-list">
+          <a class="part-entry" href="01-the-ambitious-thesis.html">
+            <span class="num">Part 1</span>
+            <span class="title">The ambitious thesis, and what it would take to be true</span>
+            <span class="sub"><span class="kind">claim</span> · covers the preface and introduction · ~18 min</span>
+          </a>
+          <a class="part-entry" href="02-the-prediction-machine.html">
+            <span class="num">Part 2</span>
+            <span class="title">The prediction machine</span>
+            <span class="sub"><span class="kind">mechanism</span> · covers chapter 1 and appendix 2 · ~17 min</span>
+          </a>
+          <a class="part-entry" href="03-precision-and-attention.html">
+            <span class="num">Part 3</span>
+            <span class="title">Precision, and why attention turns out to be the same knob</span>
+            <span class="sub"><span class="kind">mechanism</span> · covers chapter 2 and appendix 1 · ~17 min</span>
+          </a>
+          <a class="part-entry" href="04-the-imaginarium.html">
+            <span class="num">Part 4</span>
+            <span class="title">The imaginarium: the machine run with the world switched off</span>
+            <span class="sub"><span class="kind">mechanism</span> · covers chapter 3 · ~15 min</span>
+          </a>
+          <a class="part-entry" href="05-action-as-inference.html">
+            <span class="num">Part 5</span>
+            <span class="title">Action as inference, and the collapse of the sandwich</span>
+            <span class="sub"><span class="kind">mechanism</span> · covers chapter 4 · ~15 min</span>
+          </a>
+          <a class="part-entry" href="06-sculpting-the-flow.html">
+            <span class="num">Part 6</span>
+            <span class="title">Sculpting the flow, and reading other people</span>
+            <span class="sub"><span class="kind">claim</span> · covers chapter 5 · ~16 min</span>
+          </a>
+          <a class="part-entry" href="07-what-kind-of-representation.html">
+            <span class="num">Part 7</span>
+            <span class="title">What kind of representation is this?</span>
+            <span class="sub"><span class="kind">claim</span> · covers chapter 6 · ~16 min</span>
+          </a>
+          <a class="part-entry" href="08-when-precision-goes-wrong.html">
+            <span class="num">Part 8</span>
+            <span class="title">Expecting ourselves: the clinical landscape</span>
+            <span class="sub"><span class="kind">terrain</span> · covers chapter 7 · ~18 min</span>
+          </a>
+          <a class="part-entry" href="09-lazy-brains-and-dark-rooms.html">
+            <span class="num">Part 9</span>
+            <span class="title">The lazy brain, and the dark room it never enters</span>
+            <span class="sub"><span class="kind">claim</span> · covers chapter 8 · ~17 min</span>
+          </a>
+          <a class="part-entry" href="10-being-human.html">
+            <span class="num">Part 10</span>
+            <span class="title">Being human, and what "surfing" was meant to convey</span>
+            <span class="sub"><span class="kind">terrain</span> · covers chapters 9–10 · ~16 min</span>
+          </a>
+        </div>
+
+        <p>Then the two pages that close a book:
+        <a href="afterword.html">the afterword</a>, which gathers how
+        <i>Surfing Uncertainty</i> landed, the strongest objections to it, and
+        what the decade since has done to its claims — kept out of the
+        readthrough so it cannot contaminate it — and
+        <a href="glossary.html">the glossary</a>, which is worth more than
+        usual here, because the framework's vocabulary is small, precise, and
+        used by different authors to mean different things.</p>
+      </section>
+
+      <section id="still-required">
+        <h2 id="h-still-required">Is the book still required?</h2>
+
+        <p class="required">
+          <b>Mostly not — with one real exception</b>
+          These pages carry the machinery, the applications, the cases and the
+          evidence, and on the machinery they are in places more explicit than
+          the book, because Clark introduces precision descriptively where a
+          reader is better served by watching a naive design fail first. What
+          they cannot reproduce is the <em>cumulative</em> effect of Part II.
+          Clark's argument for PP is inductive: no single chapter establishes
+          it, and the persuasive force comes from watching one mechanism
+          absorb binocular rivalry, then motor control, then interoception,
+          then psychiatry, across two hundred pages. Compressed, that reads as
+          a list of applications. At full length it reads as a framework
+          becoming inevitable — which is precisely the effect the book's
+          critics say is doing illegitimate work, and you are better placed to
+          judge that argument if you have felt it.
+        </p>
+
+        <p>Read the book if you intend to <em>work</em> in this area, or to
+        take a position on whether predictive processing is a unified theory
+        or an unfalsifiable one. Read these pages if you want to know what is
+        in it, follow the machinery, and hold your own in the argument.</p>
+
+        <p>The book is published by Oxford University Press and is available
+        as <a href="https://global.oup.com/academic/product/surfing-uncertainty-9780190933210">a
+        paperback</a>; it can be borrowed through most university libraries
+        and is catalogued at <a href="https://openlibrary.org/search?q=surfing+uncertainty">Open
+        Library</a>. It is not distributed free by its author. Clark's 2013
+        article "Whatever next? Predictive brains, situated agents, and the
+        future of cognitive science" (<i>Behavioral and Brain Sciences</i>
+        36(3), 181–204) is the book's precursor and covers much of Parts I
+        and II in shorter form, with open peer commentary attached — which
+        makes it the cheapest way to sample both the argument and its
+        opposition.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site">
+    <p><a href="../../index.html">The Understudy</a> ·
+    <a href="../../about.html">About these pages</a></p>
+  </footer>
+</body>
+</html>

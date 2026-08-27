@@ -1,0 +1,30 @@
+{
+  "slug": "surfing-uncertainty",
+  "title": "Surfing Uncertainty",
+  "author": "Andy Clark",
+  "year": 2016,
+  "domains": [
+    "Cognitive science",
+    "Philosophy of mind",
+    "Neuroscience"
+  ],
+  "parts": 10,
+  "kinds": {
+    "claim": 4,
+    "mechanism": 4,
+    "terrain": 2
+  },
+  "words": 34569,
+  "reading_minutes": 198,
+  "chapters_covered": {
+    "full": 11,
+    "condensed": 1,
+    "folded": 2,
+    "read_it": 0
+  },
+  "book_still_required": "Mostly not. The machinery, cases and evidence all transmit. What does not is the cumulative force of Part II — Clark's argument is inductive, and watching one mechanism absorb domain after domain across two hundred pages is an effect ten efficient parts cannot reproduce.",
+  "prerequisites": [],
+  "status": "complete",
+  "published": "2026-08-27",
+  "updated": "2026-08-27"
+}

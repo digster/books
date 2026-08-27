@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "understudy",
-      "runtimeExecutable": "python3",
+      "runtimeExecutable": "/usr/bin/python3",
       "runtimeArgs": ["-m", "http.server", "8347"],
       "port": 8347
     }

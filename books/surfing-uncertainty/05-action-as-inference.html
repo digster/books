@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part 5 · Action as inference — Surfing Uncertainty</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../../index.html">The Understudy</a> /
+    <a href="index.html">Surfing Uncertainty</a> /
+    <span>Part 5</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="mechanism">
+      <p class="eyebrow">
+        <span>Part 5 of 10</span><span>mechanism</span><span>covers chapter 4</span><span>~15 min</span>
+      </p>
+
+      <h1 id="h-title">Action as inference, and the collapse of the sandwich</h1>
+
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p>Assumes <a href="03-precision-and-attention.html">Part&nbsp;3</a>
+        without reservation — this chapter is unreadable without precision.
+        So far the machine has been passive: it receives, predicts, and
+        revises. This part turns it around. Prediction error is a mismatch
+        between expectation and input, and a mismatch can be cancelled from
+        either end; cancelling it by moving the body is what Clark calls
+        <b>active inference</b>, and it is the move that converts a theory of
+        perception into a theory of mind. It also delivers
+        <a href="01-the-ambitious-thesis.html#j5">joint&nbsp;5</a>.</p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-ratchet">The ratchet</a></li>
+            <li><a href="#h-figure">The shape of it</a></li>
+            <li><a href="#h-trace">The trace: a reach, step by step</a></li>
+            <li><a href="#h-tickle">Why you cannot tickle yourself</a></li>
+            <li><a href="#h-costs">The cost sheet</a></li>
+          </ol>
+        </nav>
+
+        <h3 id="h-ratchet">The ratchet</h3>
+
+        <ol class="ratchet">
+          <li>
+            <h4 id="h-turn-1">The sandwich, and the arithmetic it cannot afford</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>The standard architecture, which Clark elsewhere calls the
+              <em>cognitive sandwich</em>: perception at one end, action at the
+              other, and thinking in between. Sensory systems build a
+              representation of the world, central systems decide what to do,
+              motor systems execute. It is intuitive, it maps neatly onto the
+              gross anatomy of sensory and motor cortex, and it organised the
+              field for decades.</dd>
+
+              <dt>What breaks</dt>
+              <dd>The execution stage, on inspection, is asked to do something
+              close to impossible. To move your hand to a cup, a controller
+              issuing motor commands must solve the <em>inverse dynamics</em>
+              problem: given a desired trajectory, compute the torques each
+              joint must generate. Those torques depend on the limb's current
+              configuration, its inertia, the direction of gravity relative to
+              it, the load in the hand, and the non-linear elastic behaviour
+              of muscle — and every one of those changes continuously as the
+              movement proceeds, including the load, which alters as the cup
+              empties. Worse, the problem is underdetermined in the other
+              direction: the arm has more degrees of freedom than the task
+              constrains, so infinitely many joint trajectories deliver the
+              hand to the same point. A command-issuing controller must
+              therefore solve a hard inverse problem <em>and</em> arbitrarily
+              select among infinitely many solutions, continuously, in real
+              time.</dd>
+
+              <dt>The fix</dt>
+              <dd>Stop computing torques. Predict instead the
+              <em>proprioceptive consequences</em> the desired movement would
+              have — what the muscle spindles and joint receptors would be
+              reporting if the hand were already at the cup — and let the
+              resulting mismatch be cancelled by machinery that does not need
+              to know any dynamics at all.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">The problem has been relocated rather than
+              abolished. Something must now cancel the mismatch, and something
+              must specify the desired proprioceptive state in the first
+              place.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-2">The cancelling machinery already exists</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>A descending signal that specifies expected proprioception
+              rather than commanded force.</dd>
+
+              <dt>What breaks</dt>
+              <dd>A prediction, by itself, moves nothing. Expecting your arm
+              to be somewhere it is not is not a way of getting it
+              there.</dd>
+
+              <dt>The fix</dt>
+              <dd>Hand the job to the spinal reflex arcs, which have been
+              doing precisely this since long before anyone proposed
+              predictive processing. A muscle spindle signals the muscle's
+              current length; a mismatch between that signal and the level the
+              descending drive has set produces contraction until the mismatch
+              is gone. This is classical motor physiology, and the reading
+              Clark adopts is that the descending signal is best understood as
+              <em>setting the expected sensory state</em> rather than as
+              commanding a force. The movement then happens for the same
+              reason perception happens: something is minimising prediction
+              error. It simply minimises it by changing the world — the
+              position of the arm — rather than by changing the belief.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">An ambiguity that is now structural and
+              urgent. If proprioceptive error can be resolved either by moving
+              or by updating the estimate of where the arm is, what stops the
+              system from taking the cheap option every time?</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-3">What decides between believing and moving</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>Two routes to cancelling the same error, and no principle
+              choosing between them.</dd>
+
+              <dt>What breaks</dt>
+              <dd>This is not a minor gap; taken naively the scheme is
+              paralysed. Predict that your arm is at the cup, receive
+              proprioceptive evidence that it is at your side, and the
+              cheapest resolution by far is to revise the prediction — to
+              conclude, correctly, that your arm is at your side. The
+              intention evaporates and nothing moves. Every action the
+              framework describes is threatened by the fact that the truth is
+              readily available and the truth is that you have not moved
+              yet.</dd>
+
+              <dt>The fix</dt>
+              <dd>Precision, doing the most important work it does in this
+              book. During movement, the precision of incoming proprioceptive
+              prediction error is <em>attenuated</em> while the precision of
+              the descending prediction is held high. Sensory evidence about
+              the limb's current position is transiently down-weighted, so it
+              cannot win the argument, and the only remaining route to
+              cancelling the error runs through the reflex arcs. The
+              intention becomes self-fulfilling not because it is powerful but
+              because the evidence against it has been turned down.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Sensitivity to your own movements, exactly when
+              you are making them. That is a strong, risky, empirical
+              prediction — and it is where this chapter earns its keep, since
+              the prediction was confirmed before it was made.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-4">Where desire went</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>Movement as the fulfilment of high-precision proprioceptive
+              predictions.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Nothing in this vocabulary refers to <em>wanting</em>
+              anything. The framework says organisms act to make their
+              predictions true; it does not say they act to obtain food,
+              safety or reward. Yet the entire apparatus of motivation —
+              drives, incentives, the dopaminergic reward machinery — is
+              extremely well evidenced and has to go somewhere.</dd>
+
+              <dt>The fix</dt>
+              <dd>Clark's answer, and it is the most philosophically loaded
+              move in the chapter: goals are recast as <em>expectations an
+              organism cannot help having</em> about its own states — deeply
+              embedded, high-precision predictions that it will be fed, warm,
+              upright, intact. Acting to satisfy a desire and acting to fulfil
+              a confident prediction become the same thing described twice.
+              Reward is not a separate currency being maximised; it is one of
+              the influences that shapes which expectations get installed and
+              how strongly they are weighted.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">A great deal, and Clark is candid that this is
+              the framework's most exposed flank. It makes desire a species of
+              belief, which many philosophers regard as a category error
+              rather than an economy. And it is very hard to refute: any
+              behaviour whatsoever can be redescribed after the fact as the
+              fulfilment of some expectation. The related worry — why an
+              organism built to minimise surprise does not simply hide — gets
+              its own treatment in
+              <a href="09-lazy-brains-and-dark-rooms.html">Part&nbsp;9</a>.</dd>
+            </dl>
+          </li>
+        </ol>
+
+        <figure id="h-figure">
+          <svg viewBox="0 0 420 258" role="img" aria-labelledby="afigtitle afigdesc">
+            <title id="afigtitle">The active inference loop</title>
+            <desc id="afigdesc">A descending proprioceptive prediction meets a
+            spindle signal reporting actual muscle length at a comparator. The
+            resulting error drives muscle contraction, which moves the joint,
+            which changes the spindle signal, closing the loop. A gate on the
+            ascending path marks where precision is attenuated during
+            movement.</desc>
+
+            <defs>
+              <marker id="ac-ah" viewBox="0 0 10 10" refX="9" refY="5"
+                      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="fig-arrow"/>
+              </marker>
+            </defs>
+
+            <rect x="86" y="8" width="248" height="42" rx="4" class="fig-box-hi"/>
+            <text x="96" y="26" class="fig-label">Descending prediction</text>
+            <text x="96" y="42" class="fig-val">&#8220;the joint is at 45°&#8221;</text>
+
+            <path d="M 130 50 L 130 84" class="fig-flow" marker-end="url(#ac-ah)"/>
+
+            <rect x="86" y="88" width="248" height="40" rx="4" class="fig-box"/>
+            <text x="96" y="106" class="fig-label">Comparator</text>
+            <text x="96" y="122" class="fig-val">error = predicted − actual</text>
+
+            <path d="M 130 128 L 130 164" class="fig-flow" marker-end="url(#ac-ah)"/>
+            <text x="138" y="150" class="fig-sub">drives contraction</text>
+
+            <rect x="86" y="168" width="248" height="40" rx="4" class="fig-box"/>
+            <text x="96" y="186" class="fig-label">Muscle, then joint</text>
+            <text x="96" y="202" class="fig-sub">the world changes to fit</text>
+
+            <!-- feedback path up the right side -->
+            <path d="M 334 188 L 386 188 L 386 108 L 338 108" class="fig-flow" marker-end="url(#ac-ah)"/>
+            <text x="252" y="230" class="fig-sub">spindle reports the new length</text>
+
+            <!-- precision gate on the ascending path -->
+            <rect x="360" y="132" width="52" height="26" rx="3" class="fig-box-hi"/>
+            <text x="386" y="150" class="fig-val" text-anchor="middle">π ↓</text>
+            <text x="248" y="246" class="fig-sub">precision attenuated while moving</text>
+
+            <text x="0" y="26" class="fig-sub">from</text>
+            <text x="0" y="40" class="fig-sub">above</text>
+            <text x="0" y="194" class="fig-sub">the</text>
+            <text x="0" y="208" class="fig-sub">body</text>
+          </svg>
+          <figcaption><b>Figure 1.</b> The loop that replaces the motor
+          command. Nothing in it computes a torque. The gate marked π↓ is the
+          whole trick: with the returning signal down-weighted, the mismatch
+          cannot be resolved by concluding the arm has not moved, so it is
+          resolved by moving it.</figcaption>
+        </figure>
+
+        <div class="trace">
+          <h3 id="h-trace" data-label="The trace">A reach, step by step</h3>
+
+          <p>One complete run with real values. The elbow starts at
+          <span class="val">20°</span> and the intention installs a
+          proprioceptive prediction of <span class="val">45°</span>. The
+          reflex loop reduces the mismatch by a fixed proportion of itself on
+          each pass — a loop gain of <span class="val">0.4</span>, meaning
+          each cycle removes 40% of the error that remains.</p>
+
+          <ol>
+            <li><b>Install the prediction.</b> Descending drive sets the
+            expected joint angle to <span class="val">45°</span>. The spindles
+            report <span class="val">20°</span>. The comparator sees an error
+            of <span class="val">45 − 20 = +25°</span>. Note that at this
+            instant the prediction is simply <em>false</em>: the arm is not at
+            45°. Precision attenuation is what stops that falsity from
+            settling the matter.</li>
+
+            <li><b>First pass.</b> Contraction proportional to the error moves
+            the joint by <span class="val">0.4 × 25 = 10°</span>, to
+            <span class="val">30°</span>. The remaining error is
+            <span class="val">+15°</span>.</li>
+
+            <li><b>Second pass.</b> Move by
+            <span class="val">0.4 × 15 = 6°</span>, to
+            <span class="val">36°</span>. Error now
+            <span class="val">+9°</span>.</li>
+
+            <li><b>Third pass.</b> Move by
+            <span class="val">0.4 × 9 = 3.6°</span>, to
+            <span class="val">39.6°</span>. Error
+            <span class="val">+5.4°</span>.</li>
+
+            <li><b>Fourth pass.</b> Move by
+            <span class="val">0.4 × 5.4 = 2.16°</span>, to
+            <span class="val">41.76°</span>. Error
+            <span class="val">+3.24°</span>. The steps are getting smaller in
+            fixed proportion, which is why real reaches decelerate smoothly
+            into the target rather than arriving at speed.</li>
+
+            <li><b>Settling.</b> Continue and the joint reaches
+            <span class="val">44.58°</span> after
+            <span class="val">eight</span> passes, with a residual error of
+            <span class="val">0.42°</span> — below any threshold that matters.
+            The movement is complete, and at no point did anything compute a
+            torque, consult the limb's inertia, or select among the infinitely
+            many trajectories that would have worked. The trajectory is
+            whatever falls out of the loop's dynamics.</li>
+
+            <li><b>Release the gate.</b> Once the movement ends,
+            proprioceptive precision returns to normal, and the arm's actual
+            position — now genuinely near 45° — is available as evidence
+            again. The prediction that was false when installed has been made
+            true by the process of acting on it.</li>
+          </ol>
+
+          <p>What makes this more than a redescription of a servo loop is what
+          it buys: the same quantity, prediction error, and the same
+          weighting parameter, precision, now cover both perception and
+          action. The sandwich has no middle any more, because there is
+          nothing left for the middle to do.</p>
+        </div>
+
+        <h3 id="h-tickle">Why you cannot tickle yourself</h3>
+
+        <p>Turn 3 predicted that the sensory consequences of your own actions
+        should be attenuated. That prediction has an unusually vivid test,
+        and the answer was known before the framework needed it.</p>
+
+        <p>In 1998 Sarah-Jayne Blakemore, Daniel Wolpert and Chris Frith
+        reported in <i>Nature Neuroscience</i> that a tactile stimulus
+        delivered to the palm is rated as markedly less tickly when the
+        participant produces it themselves than when an identical stimulus is
+        produced externally.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>
+        The apparatus allowed the self-produced movement to be interposed with
+        a delay or a trajectory rotation before it reached the hand, and the
+        rated ticklishness rose steadily as the delay grew — as the delivered
+        sensation diverged further from what the movement predicted. The
+        attenuation is not attached to the fact of self-production. It is
+        attached to <em>predictability</em>, and it degrades in proportion to
+        prediction failure.</p>
+
+        <p>The same mechanism has a less charming consequence. In 2003 Sukhi
+        Shergill, Paul Bays, Chris Frith and Daniel Wolpert had pairs of
+        participants take turns pressing on each other's fingers, each
+        instructed simply to match the force they had just received. They did
+        not match it. Because their own force was attenuated in their own
+        perception, each participant had to press harder than the force they
+        received in order to feel that they were matching it — and the
+        exchange escalated rapidly across turns.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup>
+        Both parties were reporting their perception honestly, and both were
+        objectively escalating. The paper's title — two eyes for an eye — is
+        the point: a familiar and disagreeable feature of human conflict falls
+        out of a precision setting on a reflex loop.</p>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>Sensory attenuation is real and replicated, but the inference
+          from it to active inference specifically is weaker than this
+          chapter's narrative suggests. The result was originally framed
+          within <em>forward-model</em> motor control — a scheme in which an
+          efference copy of the motor command is used to predict and subtract
+          the expected sensory feedback. That account long predates predictive
+          processing, makes the same prediction here, and is not obviously
+          the same theory: it retains genuine motor commands, which active
+          inference explicitly denies. Clark treats forward models as a
+          special case absorbed by the more general framework. That is a
+          defensible reading and it is a reading, not a finding — and readers
+          of the primary literature should know that many motor-control
+          researchers have not adopted it.</p>
+        </aside>
+
+        <h3 id="h-costs">The cost sheet</h3>
+
+        <div class="table-wrap">
+          <table class="costs">
+            <caption>What active inference costs, and when it is worth paying</caption>
+            <thead>
+              <tr><th scope="col">Cost</th><th scope="col">Currency</th><th scope="col">Worth paying when</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Reduced sensitivity to self-produced sensation</th><td class="currency">perceptual accuracy</td><td>Almost always — self-produced signals are the least informative ones. Paid visibly in force escalation</td></tr>
+              <tr><th scope="row">Predictions must be temporarily insulated from disconfirmation</th><td class="currency">epistemic hygiene</td><td>Necessary for any action at all; dangerous if the attenuation persists beyond the movement</td></tr>
+              <tr><th scope="row">Desire becomes a species of expectation</th><td class="currency">falsifiability, conceptual clarity</td><td>Buys unification; the contested cost of the chapter</td></tr>
+              <tr><th scope="row">Trajectories are emergent, not specified</th><td class="currency">fine control</td><td>Excellent for robustness and for coping with changing loads; poor when a precise path matters more than the endpoint</td></tr>
+              <tr><th scope="row">The middle of the sandwich disappears</th><td class="currency">— a saving</td><td>The chapter's payoff: no separate planning stage, no inverse dynamics, no arbitration between perception and action</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>This is where Clark stops sounding like a reporter and starts
+        sounding like an advocate. Chapter 4 has the book's highest density of
+        rhetorical questions and of sentences that begin by conceding a
+        difficulty and end by absorbing it. The register is confident and
+        slightly propulsive, and the metaphors turn kinetic — flow, grip,
+        engagement. It is genuinely exciting writing, and the excitement is
+        doing argumentative work: the reader is carried past the desire
+        problem faster than its difficulty warrants.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p><b>Established:</b> that treating descending motor signals as
+        proprioceptive predictions is computationally coherent and dissolves
+        two problems — inverse dynamics and redundant degrees of freedom —
+        that the command model struggles with. And that sensory attenuation
+        during self-produced movement is real, graded by predictability, and
+        has measurable consequences in behaviour.</p>
+        <p><b>Asserted:</b> that this is what motor cortex is doing, and that
+        forward-model accounts are a special case rather than a rival. Also
+        asserted, and by some distance the least supported claim in Part I or
+        II of the book, is the reduction of desire to expectation. Clark
+        offers it as an elegant simplification and defends it with
+        plausibility arguments; there is no evidence in the chapter that
+        discriminates it from a view on which value is a genuinely separate
+        quantity. A reader who feels that something has been conjured away
+        here rather than explained is not being uncharitable.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>The force-escalation study is worth pausing on because it is the
+        rare case where this framework makes contact with something outside
+        the laboratory. Its interpretation is genuinely striking: in a
+        tit-for-tat exchange, escalation does not require malice, bad faith,
+        or even misperception of the other party's intent. It requires only
+        that each side perceives its own contribution accurately as it is
+        represented internally, which is to say attenuated. Both parties are
+        honest and both are wrong in the same direction. Whether this
+        generalises beyond finger-pressing to conflicts of consequence is
+        entirely unestablished, and the paper does not claim otherwise; the
+        temptation to over-read it is strong and should be resisted.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>Active inference: prediction error cancelled by moving rather than
+        by believing, with precision attenuation as the switch that decides
+        which. The reach trace, which is the concrete thing to recall when
+        later chapters say "action" and mean this. The collapse of the
+        cognitive sandwich, which is what the rest of the book builds on. And
+        one unresolved debt — the status of desire — which
+        <a href="09-lazy-brains-and-dark-rooms.html">Part&nbsp;9</a> has to
+        answer when the dark room arrives.
+        <a href="06-sculpting-the-flow.html">Part&nbsp;6</a> takes the same
+        machinery outward, to how acting shapes the sensory stream and how we
+        read the intentions of other people.</p>
+      </section>
+
+      <section class="footnotes" aria-labelledby="h-fn">
+        <h2 id="h-fn">Footnotes</h2>
+        <ol>
+          <li id="fn-1">Blakemore, S.-J., Wolpert, D. M. &amp; Frith, C. D.
+          (1998), "Central cancellation of self-produced tickle sensation,"
+          <i>Nature Neuroscience</i> 1(7), 635–640.
+          <a class="fn-back" href="#fnref-1" aria-label="Back to reference 1">&#8617;</a></li>
+          <li id="fn-2">Shergill, S. S., Bays, P. M., Frith, C. D. &amp;
+          Wolpert, D. M. (2003), "Two eyes for an eye: the neuroscience of
+          force escalation," <i>Science</i> 301, 187.
+          <a class="fn-back" href="#fnref-2" aria-label="Back to reference 2">&#8617;</a></li>
+        </ol>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="04-the-imaginarium.html"><span class="dir">Previous</span><span class="lbl">Part 4 · The imaginarium</span></a>
+      <a rel="next" href="06-sculpting-the-flow.html"><span class="dir">Next</span><span class="lbl">Part 6 · Sculpting the flow</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p><a href="../../index.html">The Understudy</a> ·
+    <a href="index.html">Surfing Uncertainty</a> ·
+    <a href="../../about.html">About these pages</a></p>
+  </footer>
+</body>
+</html>

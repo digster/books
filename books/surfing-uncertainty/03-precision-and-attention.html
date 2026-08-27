@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part 3 · Precision and attention — Surfing Uncertainty</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <a href="../../index.html">The Understudy</a> /
+    <a href="index.html">Surfing Uncertainty</a> /
+    <span>Part 3</span>
+  </header>
+
+  <main id="main">
+    <article class="part" data-kind="mechanism">
+      <p class="eyebrow">
+        <span>Part 3 of 10</span><span>mechanism</span><span>covers chapter 2 and appendix 1</span><span>~17 min</span>
+      </p>
+
+      <h1 id="h-title">Precision, and why attention turns out to be the same knob</h1>
+
+      <section id="where">
+        <h2 id="h-where">Where we are</h2>
+        <p><a href="02-the-prediction-machine.html">Part&nbsp;2</a> built a
+        hierarchy in which descending predictions are subtracted from
+        ascending signals and only the residual travels forward, and left one
+        debt unpaid twice over: a residual is worthless until the system
+        decides how far to trust it. This part pays that debt. It is the most
+        important page in this readthrough, because Parts 4, 5, 8 and 9 are
+        all applications of the single parameter introduced here, and none of
+        them re-derives it.</p>
+      </section>
+
+      <section id="read">
+        <h2 id="h-read">The readthrough</h2>
+
+        <nav class="toc" aria-labelledby="h-toc">
+          <h2 id="h-toc">On this page</h2>
+          <ol>
+            <li><a href="#h-ratchet">The ratchet</a></li>
+            <li><a href="#h-figure">The shape of it</a></li>
+            <li><a href="#h-trace">The trace: a ridge, seen and felt</a></li>
+            <li><a href="#h-bing">Hearing Bing</a></li>
+            <li><a href="#h-costs">The cost sheet</a></li>
+          </ol>
+        </nav>
+
+        <h3 id="h-ratchet">The ratchet</h3>
+
+        <ol class="ratchet">
+          <li>
+            <h4 id="h-turn-1">Error at face value, and the fog that destroys it</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>The machine as Part 2 left it. A prediction descends, the
+              sensory signal arrives, the difference ascends, and the estimate
+              above is revised in proportion to that difference. Nothing about
+              this is obviously incomplete — it is exactly what a
+              least-squares fitting procedure does, and it works.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Put the system in fog. The visual signal is now mostly
+              noise: a weak shape somewhere inside a great deal of random
+              variation, and the residual it generates is large. Taken at face
+              value, that large residual is a strong instruction to revise the
+              model of the world — and the model duly revises, on the strength
+              of noise. Run it forward and the consequence is not
+              inefficiency, it is <em>catastrophe</em>: the system
+              hallucinates shapes into the mist and then, because the revised
+              model now predicts those shapes, finds its own inventions
+              confirmed. The same failure has a quieter everyday form. In dim
+              light the retina's own photon noise produces exactly the same
+              kind of large, meaningless residual, and a system that trusted
+              it would be least reliable precisely when it most needs to
+              be careful.</dd>
+
+              <dt>The fix</dt>
+              <dd>Do not act on error, act on <em>error scaled by how much the
+              channel it came from is currently worth listening to</em>. That
+              scaling term is <b>precision</b>, and it is defined as the
+              inverse of the expected variance of the channel: a signal with
+              small expected noise has high precision and is taken seriously;
+              a signal with large expected noise has low precision and is
+              nearly ignored. The update becomes precision-weighted, and the
+              foggy channel stops being able to bully the model.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">A second inference problem. The system does not
+              come equipped with the variances of its own channels; it has to
+              <em>estimate</em> them, from the same stream it is already
+              trying to explain.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-2">A fixed weight per sense, and why it is wrong every time</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>The obvious implementation: give each modality a reliability
+              coefficient. Vision is generally sharper than touch for spatial
+              judgements, so weight vision more. Set the constants once,
+              perhaps over evolutionary time, and be done.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Reliability is not a property of a channel; it is a property
+              of a channel <em>at this moment, in this context</em>. Vision is
+              superb at noon and nearly useless in fog, and the ratio between
+              vision and touch inverts completely between those two
+              conditions. Proprioception is dependable until the limb is
+              numbed or the tendon is vibrated. A fixed coefficient is not
+              approximately right — it is right for one lighting condition and
+              wrong for all the others, and the cases where it is most wrong
+              are exactly the dangerous ones.</dd>
+
+              <dt>The fix</dt>
+              <dd>Predict precision too. The expected reliability of each
+              error channel becomes another quantity the generative model
+              estimates, context by context, learned from experience and
+              organised hierarchically like everything else — so that a
+              higher level can predict, from the fact that it is foggy, that
+              visual error signals should be discounted for the next while.
+              Precision-weighting is not a fixed gain but a
+              <em>controlled</em> one.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Name it precisely, because it is the most
+              consequential cost in the book: <b>the model now decides how
+              much to trust the evidence against it.</b> That is not a
+              rhetorical flourish — it is the literal structure of the
+              scheme. It is what makes the machine robust, and it is what
+              makes it possible for the machine to become unfalsifiable to
+              itself.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-3">The knob turns out to be something we already had a word for</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>A controllable gain on every error channel, set by the
+              system's own contextual estimate of reliability.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Nothing breaks. Something is <em>noticed</em>, and this is
+              the turn the whole book pivots on. Consider what a controllable
+              gain on sensory channels actually does. Turn it up on one channel
+              and that channel dominates the update, driving perception and
+              learning; turn it down and it is functionally invisible, present
+              in the signal but unable to influence anything. Selecting
+              some sensory streams for influence while suppressing others,
+              flexibly, according to task and context, is not a novel
+              capability that needs explaining. It is a description of
+              <em>attention</em>.</dd>
+
+              <dt>The fix</dt>
+              <dd>Do not build an attention module and bolt it on. Clark's
+              claim is stronger and stranger than that: precision-weighting
+              and attention are <b>not two things, one of which explains the
+              other</b> — they are one operation described in two vocabularies,
+              one computational and one psychological. Attending to something
+              just <em>is</em> raising the precision on the error signals
+              carrying information about it. The classic findings the
+              attention literature accumulated — that attention enhances the
+              gain of neural responses, that attended and unattended stimuli
+              compete for representation in a way that attention biases —
+              stop being facts about a separate spotlight and become facts
+              about how this parameter is set.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Independence, in both directions. Attention can
+              no longer be studied as a faculty with its own machinery, and
+              the identification now owes debts to a large empirical
+              literature that was not built with it in mind. If some
+              well-established attentional effect turns out not to be
+              expressible as a gain change, the identification fails.</dd>
+            </dl>
+          </li>
+
+          <li>
+            <h4 id="h-turn-4">A knob can be mis-set</h4>
+            <dl class="moves">
+              <dt>What we have</dt>
+              <dd>One parameter, continuously variable, controlling the
+              balance between what you expect and what you are receiving.</dd>
+
+              <dt>What breaks</dt>
+              <dd>Consider the extremes, which the machine permits and nothing
+              prevents. Push sensory precision persistently down, or prior
+              precision persistently up, and experience is increasingly
+              determined by expectation rather than by input — which is a
+              functional description of hallucination. Push it the other way,
+              so that error signals are always taken at full strength, and
+              nothing is ever explained away: every ordinary variation demands
+              a model revision, the world stops being predictable, and it
+              becomes, in a phrase that has stuck to this literature,
+              <em>too real</em>.</dd>
+
+              <dt>The fix</dt>
+              <dd>There is no fix, because this is not a bug to be
+              engineered out — it is a prediction. If attention and psychosis
+              and autism are settings of one parameter, then the framework
+              says specific things about all three, and those things can be
+              tested. <a href="08-when-precision-goes-wrong.html">Part&nbsp;8</a>
+              is that territory.</dd>
+
+              <dt class="cost">What it costs</dt>
+              <dd class="cost">Falsifiability, arguably. One parameter that
+              explains attention, dreaming, autism and schizophrenia is either
+              a remarkable unification or a term flexible enough to
+              accommodate any result. Both readings are live, and the
+              <a href="afterword.html">afterword</a> gives each its best
+              form.</dd>
+            </dl>
+          </li>
+        </ol>
+
+        <figure id="h-figure">
+          <svg viewBox="0 0 420 296" role="img" aria-labelledby="pfigtitle pfigdesc">
+            <title id="pfigtitle">Precision as a gain on two competing estimates</title>
+            <desc id="pfigdesc">Two rows. In each, a visual estimate and a
+            haptic estimate feed a combined estimate through gains that sum to
+            one. In the top row, good light, the visual gain is 0.80 and the
+            haptic 0.20, and the result sits near the visual estimate. In the
+            bottom row the visual channel is degraded, the gains swap to 0.20
+            and 0.80, and the result sits near the haptic estimate. Neither
+            estimate changed; only the gains did.</desc>
+
+            <defs>
+              <marker id="pr-ah" viewBox="0 0 10 10" refX="9" refY="5"
+                      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="fig-arrow"/>
+              </marker>
+            </defs>
+
+            <!-- ROW 1 -->
+            <text x="0" y="12" class="fig-label">In good light</text>
+            <rect x="0" y="20" width="150" height="42" rx="4" class="fig-box"/>
+            <text x="10" y="38" class="fig-label">Vision</text>
+            <text x="10" y="54" class="fig-val">57.0 mm · σ 1.5</text>
+
+            <rect x="252" y="20" width="150" height="42" rx="4" class="fig-box"/>
+            <text x="262" y="38" class="fig-label">Touch</text>
+            <text x="262" y="54" class="fig-val">53.0 mm · σ 3.0</text>
+
+            <path d="M 75 62 L 150 92" class="fig-flow" marker-end="url(#pr-ah)"/>
+            <path d="M 327 62 L 252 92" class="fig-flow" marker-end="url(#pr-ah)"/>
+            <text x="78" y="86" class="fig-val">×0.80</text>
+            <text x="300" y="86" class="fig-val">×0.20</text>
+
+            <rect x="112" y="96" width="178" height="38" rx="4" class="fig-box-hi"/>
+            <text x="201" y="120" class="fig-val" text-anchor="middle">56.2 mm · σ 1.34</text>
+
+            <!-- ROW 2 -->
+            <text x="0" y="166" class="fig-label">With vision degraded</text>
+            <rect x="0" y="174" width="150" height="42" rx="4" class="fig-box"/>
+            <text x="10" y="192" class="fig-label">Vision</text>
+            <text x="10" y="208" class="fig-val">57.0 mm · σ 6.0</text>
+
+            <rect x="252" y="174" width="150" height="42" rx="4" class="fig-box"/>
+            <text x="262" y="192" class="fig-label">Touch</text>
+            <text x="262" y="208" class="fig-val">53.0 mm · σ 3.0</text>
+
+            <path d="M 75 216 L 150 246" class="fig-flow" marker-end="url(#pr-ah)"/>
+            <path d="M 327 216 L 252 246" class="fig-flow" marker-end="url(#pr-ah)"/>
+            <text x="78" y="240" class="fig-val">×0.20</text>
+            <text x="300" y="240" class="fig-val">×0.80</text>
+
+            <rect x="112" y="250" width="178" height="38" rx="4" class="fig-box-hi"/>
+            <text x="201" y="274" class="fig-val" text-anchor="middle">53.8 mm · σ 2.68</text>
+          </svg>
+          <figcaption><b>Figure 1.</b> The same two estimates, combined
+          twice. Nothing about either sense's report has changed between the
+          rows — vision still says 57.0&nbsp;mm. What changed is the system's
+          estimate of how noisy vision currently is, and that alone moves the
+          percept by 2.4&nbsp;mm and hands the decision from one modality to
+          the other.</figcaption>
+        </figure>
+
+        <div class="trace">
+          <h3 id="h-trace" data-label="The trace">A ridge, seen and felt</h3>
+
+          <p>One complete run, with real values. The setting is the
+          experiment that made this arithmetic respectable: in 2002 Marc Ernst
+          and Martin Banks reported in <i>Nature</i> that people combine
+          visual and haptic estimates of an object's size in the way a
+          statistician would — weighting each by its reliability — and that
+          degrading vision with added noise shifts the weighting towards touch
+          by exactly the predicted amount.</p>
+
+          <p>Take a raised ridge whose height a person both looks at and
+          grips. Vision reports <span class="val">57.0 mm</span>; touch
+          reports <span class="val">53.0 mm</span>. They disagree, as real
+          senses do. The question the machine has to answer is not which one
+          is right but how much each should count.</p>
+
+          <ol>
+            <li><b>Convert each channel's noise into precision.</b> Precision
+            is the reciprocal of the variance, and variance is the square of
+            the standard deviation. In good light the visual estimate has
+            <span class="val">σ&nbsp;=&nbsp;1.5&nbsp;mm</span>, so its
+            variance is <span class="val">2.25</span> and its precision is
+            <span class="val">1 ÷ 2.25 = 0.4444</span>. Touch has
+            <span class="val">σ&nbsp;=&nbsp;3.0&nbsp;mm</span>, variance
+            <span class="val">9.0</span>, precision
+            <span class="val">1 ÷ 9.0 = 0.1111</span>.</li>
+
+            <li><b>Turn precisions into weights.</b> Each channel's weight is
+            its share of the total precision. Total precision is
+            <span class="val">0.4444 + 0.1111 = 0.5556</span>. So vision gets
+            <span class="val">0.4444 ÷ 0.5556 = 0.80</span> and touch gets
+            <span class="val">0.1111 ÷ 0.5556 = 0.20</span>. Vision is twice
+            as precise in linear terms and therefore
+            <span class="val">four times</span> as influential, because
+            precision goes as the <em>square</em> of the reliability. That
+            squaring is the reason small differences in noise produce large
+            differences in influence.</li>
+
+            <li><b>Combine.</b> The integrated estimate is the
+            weighted average:
+            <span class="val">0.80 × 57.0 + 0.20 × 53.0 = 45.6 + 10.6 =
+            56.2 mm</span>. The percept sits near vision but is pulled a
+            little towards touch.</li>
+
+            <li><b>Note what happened to the uncertainty.</b> Precisions
+            <em>add</em>: the combined precision is
+            <span class="val">0.5556</span>, so the combined variance is
+            <span class="val">1 ÷ 0.5556 = 1.80</span> and the combined
+            standard deviation is <span class="val">√1.80 = 1.34 mm</span>.
+            That is <em>lower</em> than either channel alone — better than
+            vision's 1.5&nbsp;mm. Two disagreeing senses produce an estimate
+            more reliable than either. This is the pay-off that makes the
+            whole scheme worth its cost, and it is the part most often left
+            out of informal accounts.</li>
+
+            <li><b>Now degrade the vision.</b> Add visual noise so that
+            <span class="val">σ&nbsp;=&nbsp;6.0&nbsp;mm</span>. Visual
+            variance becomes <span class="val">36.0</span> and visual
+            precision <span class="val">1 ÷ 36.0 = 0.0278</span>. Touch is
+            unchanged at <span class="val">0.1111</span>. Total precision is
+            now <span class="val">0.1389</span>.</li>
+
+            <li><b>The weights invert, exactly.</b> Vision gets
+            <span class="val">0.0278 ÷ 0.1389 = 0.20</span>; touch gets
+            <span class="val">0.1111 ÷ 0.1389 = 0.80</span>. The integrated
+            estimate is <span class="val">0.20 × 57.0 + 0.80 × 53.0 =
+            11.4 + 42.4 = 53.8 mm</span>, and the combined standard deviation
+            rises to <span class="val">√7.2 = 2.68 mm</span> — the system is
+            correctly less certain than before.</li>
+
+            <li><b>Read what this means.</b> Neither sense changed its report.
+            The percept moved <span class="val">2.4 mm</span> and the
+            dominant modality changed hands, purely because one number — the
+            system's estimate of its own visual noise — was altered. That
+            number is precision, and turning it is the operation that the rest
+            of this book keeps performing.</li>
+          </ol>
+        </div>
+
+        <p>The arithmetic just run is the whole content of the book's first
+        appendix, <i>Bare Bayes</i>, in the only form most readers need: two
+        estimates, each with an uncertainty, combined by adding precisions and
+        averaging by precision share. That is Bayes' rule for Gaussian
+        quantities. Everything else in the appendix is the general
+        formulation of the same move.</p>
+
+        <h3 id="h-bing">Hearing Bing</h3>
+
+        <p>The trace shows precision working. Clark's memorable case shows it
+        failing, and it is the reason chapter 2 stays with a reader. In 2001
+        Harald Merckelbach and Vincent van de Ven played
+        <span class="val">44</span> undergraduate students a recording of
+        white noise. They told them the recording might contain a faint
+        snatch of Bing Crosby's <i>White Christmas</i>, and asked them to
+        press a button when they heard it. There was no music on the tape at
+        any point. <span class="val">32%</span> of them pressed the
+        button at least once.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup></p>
+
+        <p>Run it through the machine. A strong prior has been installed by
+        the instruction — a specific expected auditory pattern, given high
+        precision because the experimenter's assurance is credible. The
+        incoming channel is white noise, which by construction has very low
+        precision: nothing in it is reliable. High-precision prior, very
+        low-precision evidence, and the update resolves overwhelmingly towards
+        the prior. What the system delivers is not a judgement that the song
+        is probably there. It is the experience of hearing it, because on this
+        account the percept just <em>is</em> the winning hypothesis. Those who
+        pressed the button scored higher on measures of fantasy proneness,
+        which the framework reads as a standing disposition to weight priors
+        heavily.</p>
+
+        <p>Put the blindfold study from
+        <a href="01-the-ambitious-thesis.html#h-walk">Part&nbsp;1</a> beside
+        it and the pair covers both routes to the same outcome: drive sensory
+        precision to the floor by removing the signal, or raise prior
+        precision by supplying an expectation, and in both cases the model
+        speaks unopposed. The mechanism does not distinguish hallucination
+        from perception by any internal mark. It distinguishes them only by
+        whether the winning hypothesis happened to be true.</p>
+
+        <aside class="note">
+          <p class="note-label">Note</p>
+          <p>The identification of attention with precision is the book's
+          boldest single move and it is not universally accepted, so it is
+          worth being clear what would count against it. The proposal covers
+          gain-like attentional phenomena very naturally — enhanced neural
+          responses to attended stimuli, competition between stimuli biased by
+          task set. It has a harder time with attentional effects that look
+          structural rather than gain-like, such as feature binding and the
+          serial character of visual search, where the question is not how
+          strongly a signal counts but which things get bound to which. Clark
+          treats these as absorbable; several attention researchers do not.
+          Note also that Clark is not the originator here — the formal
+          proposal that attention is precision optimisation was made by
+          Harriet Feldman and Karl Friston in 2010, and Clark's contribution
+          is to make it carry philosophical weight.</p>
+        </aside>
+
+        <h3 id="h-costs">The cost sheet</h3>
+
+        <div class="table-wrap">
+          <table class="costs">
+            <caption>What precision-weighting costs, and when it is worth paying</caption>
+            <thead>
+              <tr><th scope="col">Cost</th><th scope="col">Currency</th><th scope="col">Worth paying when</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">A second inference problem — estimating your own noise</th><td class="currency">computation</td><td>Always: the alternative is a system destroyed by its first foggy morning</td></tr>
+              <tr><th scope="row">The model sets how far to trust evidence against itself</th><td class="currency">self-correction</td><td>Not optional, and the source of every pathology in <a href="08-when-precision-goes-wrong.html">Part&nbsp;8</a></td></tr>
+              <tr><th scope="row">Attention loses its independent machinery</th><td class="currency">theoretical modularity</td><td>Worth paying if the identification holds; a large debt to the attention literature if it does not</td></tr>
+              <tr><th scope="row">One parameter explains very many phenomena</th><td class="currency">falsifiability</td><td>The book's central trade, and its most contested one</td></tr>
+              <tr><th scope="row">Precision estimates are themselves learned, so they can be learned wrong</th><td class="currency">stability</td><td>Tolerable in a stable world; compounding in an unpredictable one</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="voice">
+        <h2 id="h-voice">Voice</h2>
+        <p>Chapter 2 is where Clark's prose comes alive, and the chapter title
+        tells you how he is thinking about it: adjusting the volume, a
+        physical knob on a physical device. He reaches for the everyday
+        registration of the idea — the cocktail party, the noisy line, the
+        expected knock — before the formal one, and the section headings are
+        playful in a way the rest of the book is not. It is also where he
+        first uses a move that recurs constantly afterwards: introduce a
+        phenomenon everyone already has a name for, then show it falling out
+        of the machinery, and let the reader supply the sense of inevitability
+        themselves.</p>
+      </section>
+
+      <section id="ledger">
+        <h2 id="h-ledger">What this establishes, and what it asserts</h2>
+        <p><b>Established, and quantitatively:</b> that human sensory
+        integration follows precision-weighted combination closely enough to
+        be predicted numerically, and that manipulating a channel's noise
+        shifts its influence by the predicted amount. Of everything in this
+        book, the cue-combination evidence is the strongest — it is precise,
+        replicated, and it makes a risky quantitative prediction rather than
+        accommodating a qualitative pattern.</p>
+        <p><b>Asserted, and doing far more work than the evidence
+        licenses:</b> that the <em>same</em> quantity that governs cue
+        combination in psychophysics is the quantity implemented by neuromodulatory
+        gain control in cortex, and that it is identical to attention. Each
+        step is plausible; the chain is long, and the later chapters lean on
+        the chain rather than on its individual links. Clark states the
+        identification with a confidence the empirical case does not supply.
+        Where he says the framework <em>explains</em> attention, what has
+        actually been shown is that a well-evidenced psychophysical
+        principle and a well-evidenced neural phenomenon can be described in
+        the same vocabulary.</p>
+      </section>
+
+      <section id="notes">
+        <h2 id="h-notes">Notes</h2>
+        <p>On the White Christmas study: it has held up as a demonstration and
+        has been repeated in several variants, but the specific figure should
+        be handled with care. Rates of reported hearing vary substantially
+        across replications depending on how the instruction is phrased and
+        how the report is elicited — which is itself a point in the
+        framework's favour, since the instruction <em>is</em> the prior being
+        installed, but it means the number is a property of a procedure rather
+        than a constant of human nature. The associated finding, that
+        fantasy proneness predicts susceptibility, comes from a correlational
+        design on a student sample and should not be read as establishing a
+        mechanism.</p>
+        <p>A note on vocabulary that will save confusion later. In this
+        literature "precision" is always the inverse of variance, but authors
+        differ on <em>what</em> the precision is attached to. Precision on
+        prediction error, precision on the prior, and precision on the
+        likelihood are three different quantities that behave differently, and
+        papers frequently move between them without warning. Clark is
+        generally talking about precision on prediction error. When
+        <a href="08-when-precision-goes-wrong.html">Part&nbsp;8</a> reports
+        competing accounts of autism that sound contradictory, the
+        contradiction is often this ambiguity rather than a real
+        disagreement.</p>
+      </section>
+
+      <section id="carry">
+        <h2 id="h-carry">What you carry forward</h2>
+        <p>One knob, and the vocabulary for it: precision is inverse variance,
+        precisions add, weights are precision shares, and the percept is the
+        precision-weighted resolution of prior against evidence. The
+        cue-combination trace, which is the thing to re-run mentally whenever
+        a later claim about precision feels hand-wavy. And the identification
+        — attention <em>is</em> this parameter, not a consequence of it.
+        <a href="04-the-imaginarium.html">Part&nbsp;4</a> takes the machine
+        and drives sensory precision to zero, which turns out to give you
+        imagination, dreaming and memory for free.</p>
+      </section>
+
+      <section class="footnotes" aria-labelledby="h-fn">
+        <h2 id="h-fn">Footnotes</h2>
+        <ol>
+          <li id="fn-1">Merckelbach, H. &amp; van de Ven, V. (2001), "Another
+          White Christmas: fantasy proneness and reports of 'hallucinatory
+          experiences' in undergraduate students," <i>Journal of Behavior
+          Therapy and Experimental Psychiatry</i> 32(3), 137–144. The
+          "another" acknowledges an earlier generation of White Christmas
+          studies going back to the 1960s.
+          <a class="fn-back" href="#fnref-1" aria-label="Back to reference 1">&#8617;</a></li>
+        </ol>
+      </section>
+    </article>
+
+    <nav class="pager" aria-label="Parts">
+      <a rel="prev" href="02-the-prediction-machine.html"><span class="dir">Previous</span><span class="lbl">Part 2 · The prediction machine</span></a>
+      <a rel="next" href="04-the-imaginarium.html"><span class="dir">Next</span><span class="lbl">Part 4 · The imaginarium</span></a>
+    </nav>
+  </main>
+
+  <footer class="site">
+    <p><a href="../../index.html">The Understudy</a> ·
+    <a href="index.html">Surfing Uncertainty</a> ·
+    <a href="../../about.html">About these pages</a></p>
+  </footer>
+</body>
+</html>
