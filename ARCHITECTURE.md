@@ -62,11 +62,43 @@ subtler:
   unreadable in dark mode and nothing in the pipeline could rewrite it,
   because there is no pipeline.
 
-### The bootstrap ships zero JavaScript
+### One script, and it only enhances
 
-Not "minimal" — none. Footnote round-trips, the arrival highlight, and the
-skip link are all pure CSS (`:target`, `:focus`). If JS is ever added it may
-only enhance, and it may never `fetch()`.
+Footnote round-trips, the arrival highlight, and the skip link are all pure
+CSS (`:target`, `:focus`). The site's one script is **`assets/theme.js`**, the
+light/dark switch in the header. It is the model for any script added later:
+it only enhances, it never `fetch()`es, and with JS off every page is complete,
+with the switch hidden and the OS setting in charge.
+
+How the pieces fit, because each was a deliberate choice:
+
+- **Loaded synchronously in `<head>`**, straight after the stylesheet, on
+  every page. It sets `data-theme="light"|"dark"` on `<html>` before the body
+  is parsed, so the first frame is already in the right theme. `defer` or
+  `async` would paint one frame in the OS theme and then flash. It is a
+  **classic script, never a module**, because Chrome refuses module scripts
+  from `file://`.
+- **The attribute always holds the *effective* theme**: the reader's saved
+  choice, else the OS. So one selector drives everything, including showing
+  the switch and drawing its on/off state from the first frame.
+  `aria-checked` is kept in step for assistive technology but draws nothing.
+- **The switch is static markup, `hidden` by default**, in every page's
+  `header.site`: a `<button role="switch">`. CSS un-hides it as soon as
+  `data-theme` exists (author `display` outranks the UA's `[hidden]` rule).
+  So it is present from the first frame and never pops in to shift the header.
+- **Only a deviation from the OS is stored** (`localStorage`,
+  `understudy-theme`). Flipping back to match the OS deletes the key, which
+  is how a two-state switch gets back to "automatic". Storage access is
+  guarded throughout. Where it throws, a choice lasts for one page.
+- **The dark token values are written twice** in `style.css`: once under
+  `prefers-color-scheme: dark`, guarded by `:not([data-theme="light"])`, and
+  once under `[data-theme="dark"]`. Plain CSS cannot OR a media query with a
+  selector, and there is no preprocessor. `tools/check.py` fails if the two
+  blocks drift apart.
+- **Both dark selectors are wrapped in `:where()`**, so they weigh exactly
+  what `:root` does. The print block's plain `:root` then wins by source
+  order. Without that, printing from dark mode would pull the dark ink tokens
+  onto white paper.
 
 ---
 
@@ -87,7 +119,9 @@ Three consequences worth knowing before editing:
 1. **Dark mode redefines all three but preserves their order.** That is why
    the design rule needs no second statement for dark mode: recessed is always
    darker than its ground, raised is always lighter. If you change one ground,
-   change the others to keep the ordering, or the semantics invert.
+   change the others to keep the ordering, or the semantics invert. The dark
+   values live in **two identical blocks** (see §2, "One script"), so edit
+   both. The checker fails if you don't.
 
 2. **Print re-encodes the same distinction as borders.** Browsers omit
    background graphics by default, so on paper all three grounds collapse to
@@ -143,6 +177,7 @@ material that happens to live in the same repo:
 | Path | Role |
 |---|---|
 | `tools/check.py` | structural checker; never runs at serve time |
+| `tools/test_theme.py` | browser tests for the theme switch (Playwright, via `uv`) |
 | `memory/` | dated work summaries |
 | `LEARNINGS.md` | accumulated gotchas specific to this codebase |
 | `.claude/launch.json` | local preview server config |
@@ -158,12 +193,23 @@ make `_template/` vanish from a deployed site.
 
 Two layers, and the split is deliberate.
 
-**Mechanical — `tools/check.py`.** Nine checks, standard library only. These
+**Mechanical — `tools/check.py`.** Ten checks, standard library only. These
 are the failures that are boring to re-verify by hand on every page of every
 book, and the class of error hand-checking reliably misses: broken relative
 links, dangling anchors, absolute paths, a heading level skipped, a footnote
 whose return link points nowhere, a `meta.json` whose counts drifted from the
-files beside it.
+files beside it, a page missing `theme.js` or its switch, the two dark token
+blocks disagreeing.
+
+**Behavioural — `tools/test_theme.py`.** The one piece of the site that
+*does* anything needs a browser to test. Playwright drives headless Chromium
+through the switch's whole contract: first frame, persistence, the OS
+followed until the reader chooses, other tabs, print, `file://`, keyboard,
+blocked storage, and 360px. It is written in the same spirit as the checker:
+every test was confirmed to fail against a deliberately broken copy. Two of
+the tests first passed against a broken copy and had to be rewritten, because
+they checked something that is fine anyway once the page has finished
+loading. Run it after touching `theme.js`, the dark tokens, or the header.
 
 The checker has its own negative test: break one thing per check in a scratch
 copy of the tree and confirm each fires. This is not ceremony — it caught two

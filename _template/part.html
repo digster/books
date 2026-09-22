@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Part templates — The Understudy</title>
   <link rel="stylesheet" href="../assets/style.css">
+  <script src="../assets/theme.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -12,6 +13,7 @@
   <header class="site">
     <a href="../index.html">The Understudy</a> /
     <span>Templates</span>
+    <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark theme" hidden>Dark<span class="theme-switch"></span></button>
   </header>
 
   <main id="main">
@@ -34,8 +36,10 @@
       <section id="read">
         <h2 id="h-read">The shared skeleton</h2>
 
-        <p>Every part page, whatever its kind, has the same bones: a skip
-        link, a breadcrumb header, one <code>&lt;h1&gt;</code>, an
+        <p>Every part page, whatever its kind, has the same bones: the
+        stylesheet and <code>theme.js</code> in the head, a skip link, a
+        breadcrumb header ending in the theme switch, one
+        <code>&lt;h1&gt;</code>, an
         <code>article.part</code> carrying <code>data-kind</code>, the six
         sections in order, a pager, and a site footer. Only the contents of
         <code>#read</code> differ by kind, and the difference is not

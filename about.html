@@ -6,6 +6,7 @@
   <title>About — The Understudy</title>
   <meta name="description" content="What these pages are, the five tests they have to pass, and an honest statement of what a readthrough cannot do.">
   <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/theme.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -13,6 +14,7 @@
   <header class="site">
     <a href="index.html">The Understudy</a> /
     <span>About</span>
+    <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark theme" hidden>Dark<span class="theme-switch"></span></button>
   </header>
 
   <main id="main">
@@ -176,9 +178,12 @@
       <section id="design">
         <h2 id="h-design">How these pages are built</h2>
 
-        <p>Hand-authored static HTML. No build step, no JavaScript, no
-        network requests — every page renders from the filesystem with the
-        network off, and will still render in ten years.</p>
+        <p>Hand-authored static HTML. No build step, no network requests —
+        every page renders from the filesystem with the network off, and will
+        still render in ten years. There is one small script, and all it does
+        is remember whether you prefer the light or the dark theme. Turn
+        JavaScript off and nothing is lost: the switch disappears and the
+        pages follow your system's setting instead.</p>
 
         <h3 id="h-direction">The design direction: two surfaces</h3>
 
@@ -230,15 +235,19 @@
         mode every ground is redefined but their <em>order</em> is
         preserved — recessed stays darker than the page, raised stays
         lighter — which is why the rule above needs no second version for
-        dark mode. On paper, where browsers omit background graphics, the
-        same distinction is re-encoded as borders.</p>
+        dark mode. The pages follow your system's setting until you use the
+        switch in the header; after that they keep your choice, and flipping
+        the switch back to match your system hands control back to it. On
+        paper, where browsers omit background graphics, the same distinction
+        is re-encoded as borders, and a page always prints light.</p>
       </section>
     </article>
   </main>
 
   <footer class="site">
     <p><a href="index.html">The shelf</a></p>
-    <p>Hand-authored static HTML. No build step, no JavaScript, no network.</p>
+    <p>Hand-authored static HTML. No build step, no network, and nothing
+    that needs JavaScript.</p>
   </footer>
 </body>
 </html>
