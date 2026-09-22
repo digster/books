@@ -145,3 +145,51 @@ against a rule known to work. Always `resize_window` to an explicit viewport and
 assert `getComputedStyle(body).fontFamily` before measuring, and serve over
 `http://` rather than opening `file://` in the pane. `getComputedStyle` on real
 elements is reliable; CSSOM introspection and `:target` are not.
+
+## Author `display` silently overrides the `hidden` attribute
+
+`[hidden] { display: none }` is a user-agent rule, and any author rule that
+sets `display` beats it whatever its specificity. The theme switch relies on
+this on purpose: it carries `hidden` for no-JS readers, and
+`:root[data-theme] .theme-toggle { display: inline-flex }` shows it from the
+first frame. The same fact is a trap everywhere else. Put `display: flex` on a
+base class, and every `hidden` element with that class reappears.
+
+**Rule:** never set `display` in a component's base rule if its markup may
+carry `hidden`; set it only under the condition that should reveal it.
+
+## Checking a test only after load can miss a first-frame bug
+
+Two theme tests passed against deliberately broken copies. One asserted the
+switch was visible, but `theme.js` removes `hidden` on DOMContentLoaded, so
+deleting the CSS that shows it from the first frame changed nothing the test
+could see. The other checked `body` colours in print, but the print block
+hard-codes them, so dark tokens leaking into print were invisible there. The
+fixes were a MutationObserver probe that records state when the parser
+inserts the switch, and asserting on the tokens themselves.
+
+**Rule:** for a first-frame property, observe it before DOMContentLoaded. For
+a token cascade, assert on the token, not on an element that might hard-code
+the value. Then break the implementation and watch the test fail.
+
+## A theme override needs `:where()`, or print inherits it
+
+`:root[data-theme="dark"]` weighs (0,2,0) and beats the print block's plain
+`:root` (0,1,0) whatever the source order, so printing from dark mode would
+pull dark ink tokens onto white paper. Both dark-token selectors are wrapped
+in `:where()` to weigh exactly what `:root` does, and print wins by coming
+later.
+
+**Rule:** any selector that sets theme tokens must weigh no more than `:root`.
+
+## Module scripts do not run from `file://` in Chrome
+
+`<script type="module">` is fetched with CORS, and `file://` has no origin to
+satisfy it, so Chrome refuses it. `file://` is a required surface here. Scripts
+are classic, and the checker fails `theme.js` loaded as a module.
+
+## Chromium blockifies a flex item's `inline-flex`
+
+The switch is declared `display: inline-flex` but computes as `flex`, because
+it is a child of the flex header. An assertion on the exact value failed
+while the page was correct. Assert on what matters (`!= "none"`).

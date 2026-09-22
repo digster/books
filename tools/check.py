@@ -65,6 +65,51 @@ def has_markup(scope: str, kind_of: str, name: str) -> bool:
                for m in re.finditer(r'class="([^"]*)"', scope))
 
 
+# The theme switch. assets/theme.js must load synchronously in <head> on every
+# page (anything later paints a frame in the wrong theme), and every page
+# carries exactly one switch in its site header. See ARCHITECTURE.md §2.
+THEME_JS = ROOT / "assets" / "theme.js"
+TOGGLE_ATTRS = {"type": "button", "role": "switch"}
+TOGGLE_REQUIRED = ("aria-checked", "aria-label", "hidden")
+
+# The dark token values are written twice in style.css, because plain CSS
+# cannot OR a media query with a selector. Neither block contains a brace, so
+# a non-greedy match to the first "}" captures exactly its declarations.
+DARK_BLOCKS = {
+    "OS dark (media query)": re.compile(
+        r'@media \(prefers-color-scheme: dark\)\s*\{\s*'
+        r':root:where\(:not\(\[data-theme="light"\]\)\)\s*\{(.*?)\}', re.S),
+    "chosen dark (data-theme)": re.compile(
+        r'^:root:where\(\[data-theme="dark"\]\)\s*\{(.*?)\}', re.S | re.M),
+}
+
+# Anything that lets a script reach the network. fetch() also breaks file://,
+# which is why the brief forbids it by name.
+NETWORK_JS = re.compile(
+    r"\bfetch\s*\(|XMLHttpRequest|\bimport\s*\(|sendBeacon|WebSocket|EventSource")
+
+
+def strip_js_comments(code: str) -> str:
+    """Drop /* */ and // comments, so prose about fetch() is not a violation.
+
+    Naive about `//` inside string literals, which can only ever hide code
+    from the scan, never invent a match -- acceptable for a site whose one
+    script contains no URLs.
+    """
+    return re.sub(r"/\*.*?\*/|//[^\n]*", "", code, flags=re.S)
+
+
+def css_declarations(block: str) -> dict[str, str]:
+    """Parse `prop: value;` pairs, ignoring comments and whitespace layout."""
+    block = re.sub(r"/\*.*?\*/", "", block, flags=re.S)
+    decls = {}
+    for part in block.split(";"):
+        if ":" in part:
+            prop, value = part.split(":", 1)
+            decls[prop.strip()] = " ".join(value.split())
+    return decls
+
+
 META_REQUIRED = [
     "slug", "title", "author", "year", "domains", "parts", "kinds", "words",
     "reading_minutes", "chapters_covered", "book_still_required",
@@ -91,7 +136,13 @@ class Page(HTMLParser):
         self.fn_refs: list[str] = []                # <a href="#fn-..."> targets
         self.fn_backs: list[str] = []               # <a class="fn-back" href="#...">
         self.script_srcs: list[str] = []
+        # (attrs, was it inside <head>?) for every <script>
+        self.scripts: list[tuple[dict, bool]] = []
+        # (tag, attrs, was it inside header.site?) for every .theme-toggle
+        self.toggles: list[tuple[str, dict, bool]] = []
         self._in_title = False
+        self._in_head = False
+        self._in_site_header = False
         self._h_stack: list[int] = []
 
     def handle_starttag(self, tag: str, attrs_list: list) -> None:
@@ -123,16 +174,29 @@ class Page(HTMLParser):
                     self.srcs.append(a[key])
         elif tag == "script":
             self.script_srcs.append(a.get("src", "<inline>"))
+            self.scripts.append((a, self._in_head))
+            if a.get("src"):
+                self.srcs.append(a["src"])   # so check_links resolves it too
+        elif tag == "head":
+            self._in_head = True
         elif tag in ("main", "header", "footer", "nav", "article", "section", "aside"):
             self.landmarks.add(tag)
             if tag == "section" and a.get("id"):
                 self.section_ids.add(a["id"])
+            if tag == "header" and "site" in (a.get("class") or "").split():
+                self._in_site_header = True
         if a.get("data-kind"):
             self.kinds.append(a["data-kind"])
+        if "theme-toggle" in (a.get("class") or "").split():
+            self.toggles.append((tag, a, self._in_site_header))
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
             self._in_title = False
+        elif tag == "head":
+            self._in_head = False
+        elif tag == "header":
+            self._in_site_header = False
 
     def handle_data(self, data: str) -> None:
         if self._in_title:
@@ -245,6 +309,15 @@ def check_network(rep: Report, pages: dict[Path, Page]) -> None:
         if "@import" in css.read_text():
             rep.warn("network", "assets/style.css contains @import")
 
+    # JavaScript may only enhance, and may never reach the network.
+    for js in sorted((ROOT / "assets").rglob("*.js")):
+        m = NETWORK_JS.search(strip_js_comments(js.read_text(encoding="utf-8")))
+        if m:
+            rep.fail("network", f"{rel(js)} uses '{m.group(0)}' "
+                                "(scripts may never reach the network)")
+        else:
+            rep.tally("network")
+
 
 def check_structure(rep: Report, pages: dict[Path, Page]) -> None:
     """One <h1> per page; heading levels never skip going down."""
@@ -345,6 +418,71 @@ def check_parts(rep: Report, pages: dict[Path, Page], raw: dict[Path, str]) -> N
                     rep.tally("kinds")
 
 
+def check_theme(rep: Report, pages: dict[Path, Page]) -> None:
+    """theme.js in every <head>, one switch per header, dark tokens in sync."""
+    for path, page in pages.items():
+        name = rel(path)
+        before = len(rep.failures)
+
+        loads = [(a, in_head) for a, in_head in page.scripts
+                 if a.get("src")
+                 and (path.parent / unquote(a["src"])).resolve() == THEME_JS]
+        if len(loads) != 1:
+            rep.fail("theme", f"{name} loads assets/theme.js {len(loads)} "
+                              "time(s) (must be exactly 1)")
+        else:
+            attrs, in_head = loads[0]
+            if not in_head:
+                rep.fail("theme", f"{name} loads theme.js outside <head> "
+                                  "(the first frame would paint in the wrong theme)")
+            if "defer" in attrs or "async" in attrs:
+                rep.fail("theme", f"{name} loads theme.js with defer/async "
+                                  "(the first frame would paint in the wrong theme)")
+            if attrs.get("type") not in (None, "text/javascript"):
+                rep.fail("theme", f"{name} loads theme.js as type="
+                                  f"'{attrs['type']}' (Chrome refuses module "
+                                  "scripts from file://)")
+
+        if len(page.toggles) != 1:
+            rep.fail("theme", f"{name} has {len(page.toggles)} .theme-toggle "
+                              "(must be exactly 1)")
+        else:
+            tag, attrs, in_header = page.toggles[0]
+            if tag != "button":
+                rep.fail("theme", f"{name} .theme-toggle is a <{tag}>, not a <button>")
+            if not in_header:
+                rep.fail("theme", f"{name} .theme-toggle is outside header.site")
+            for key, want in TOGGLE_ATTRS.items():
+                if attrs.get(key) != want:
+                    rep.fail("theme", f"{name} .theme-toggle needs {key}=\"{want}\"")
+            for key in TOGGLE_REQUIRED:
+                if key not in attrs:
+                    rep.fail("theme", f"{name} .theme-toggle is missing '{key}'")
+
+        if len(rep.failures) == before:
+            rep.tally("theme")
+
+    css = ROOT / "assets" / "style.css"
+    if not css.is_file():
+        return
+    text = css.read_text(encoding="utf-8")
+    blocks = {}
+    for label, pattern in DARK_BLOCKS.items():
+        m = pattern.search(text)
+        if m:
+            blocks[label] = css_declarations(m.group(1))
+        else:
+            rep.fail("theme", f"assets/style.css has no {label} token block")
+    if len(blocks) == 2:
+        (la, a), (lb, b) = blocks.items()
+        drift = sorted(k for k in a.keys() | b.keys() if a.get(k) != b.get(k))
+        if drift:
+            rep.fail("theme", "assets/style.css dark token blocks disagree on "
+                              + ", ".join(drift) + f" ({la} vs {lb})")
+        else:
+            rep.tally("theme")
+
+
 def check_meta(rep: Report) -> None:
     """meta.json valid, complete, and internally consistent."""
     for meta_path in sorted(ROOT.rglob("meta.json")):
@@ -388,7 +526,7 @@ def check_meta(rep: Report) -> None:
 
 
 CHECKS = ["nojekyll", "links", "network", "structure", "a11y",
-          "footnotes", "parts", "kinds", "meta"]
+          "footnotes", "parts", "kinds", "theme", "meta"]
 
 
 def main() -> int:
@@ -426,6 +564,7 @@ def main() -> int:
     if run("a11y"):      check_a11y(rep, pages)
     if run("footnotes"): check_footnotes(rep, pages)
     if run("parts") or run("kinds"): check_parts(rep, pages, raw)
+    if run("theme"):     check_theme(rep, pages)
     if run("meta"):      check_meta(rep)
 
     print(f"\n  {len(files)} pages checked\n")

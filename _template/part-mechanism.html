@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Template · mechanism part — The Understudy</title>
   <link rel="stylesheet" href="../assets/style.css">
+  <script src="../assets/theme.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -13,6 +14,7 @@
     <a href="../index.html">The Understudy</a> /
     <a href="part.html">Templates</a> /
     <span>mechanism</span>
+    <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark theme" hidden>Dark<span class="theme-switch"></span></button>
   </header>
 
   <main id="main">
@@ -206,7 +208,7 @@
         <p>Where the book uses code, it appears here as a minimal
         reimplementation — never a transcribed listing. Twenty readable lines
         beat eighty faithful ones. Highlighting is hand-applied or absent;
-        there is no JavaScript on this site to do it.</p>
+        there is no highlighter on this site to do it.</p>
 
 <pre><code class="language-python"><span class="c"># A two-stage lookup, reduced to the part that matters.</span>
 <span class="k">def</span> resolve(addr, directory, chunks):

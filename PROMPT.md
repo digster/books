@@ -37,3 +37,7 @@ Deliverable summary in [memory/2026-08-25.md](memory/2026-08-25.md).
   permanent distinction so future sessions are not confused, including in any
   folder-scoped memory.
 - Implement the plan.
+
+## 2026-09-22
+
+- Add a dark mode toggle.
